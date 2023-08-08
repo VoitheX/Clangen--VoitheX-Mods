@@ -27,6 +27,8 @@ class Pelt():
         'Tortie': None,
         'Calico': None,
         'VSokoke': 'vsokoke',
+        'SpeckledTabby': 'speckledtabby',
+        'Stain': 'stain'
     }
     
     # ATTRIBUTES, including non-pelt related

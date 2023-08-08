@@ -207,7 +207,8 @@ for x in [
     'medcatherbs', 'lineartdf', 'lightingnew', 'fademask',
     'fadestarclan', 'fadedarkforest',
     'blackpatches', 'brownpatches', 'gingerpatches', 'voithexpatches', 'voithexpeltssingle', 'voithexpeltstabby', 'voithexpeltsmarbled', 'voithexpeltsrosette', 'voithexpeltssmoke', 'voithexpeltsticked',
-    'voithexpeltsspeckled', 'voithexpeltsbengal', 'voithexpeltsmackrel', 'voithexpeltsclassic', 'voithexpeltssokoke', 'voithexpeltsagouti', 'voithexpeltssinglestripe', 'voithexpeltssokokev', 'voithexsokoke'
+    'voithexpeltsspeckled', 'voithexpeltsbengal', 'voithexpeltsmackrel', 'voithexpeltsclassic', 'voithexpeltssokoke', 'voithexpeltsagouti', 'voithexpeltssinglestripe', 'voithexpeltssokokev', 'voithexsokoke',
+    'voithexspeckledtabby', 'voithexpeltsspeckledtabby', 'voithexstain', 'voithexpeltsstain'
 
 ]:
     if 'lineart' in x and game.config['fun']['april_fools']:
@@ -490,6 +491,30 @@ for a, i in enumerate(['PEACHYELLOW', 'MOCHA', 'METALLICBRONZE', 'WALNUT', 'FOX'
     sprites.make_group('voithexpeltssokokev', (a, 0), f'vsokoke{i}')
 for a, i in enumerate(['CLOUD', 'VAMPIRE', 'DOVE', 'GRAVEL', 'SLATEGREY', 'ICE', 'CADETBLUE', 'OLDLAVENDER', 'COMET', 'MIDGREY', 'IRONGREY', 'DUST', 'VIOLET', 'DARKVIOLET', 'BLUEVIOLET', 'CHARCOAL', 'ASH', 'PALEVIOLET']):
     sprites.make_group('voithexpeltssokokev', (a, 1), f'vsokoke{i}')
+
+# VoitheX Speckled Tabby
+for a, i in enumerate(['WHITE', 'PALEGREY', 'SILVER', 'GREY', 'DARKGREY', 'GHOST', 'BLACK']):
+    sprites.make_group('voithexspeckledtabby', (a, 0), f'speckledtabby{i}')
+for a, i in enumerate(['CREAM', 'PALEGINGER', 'GOLDEN', 'GINGER', 'DARKGINGER', 'SIENNA']):
+    sprites.make_group('voithexspeckledtabby', (a, 1), f'speckledtabby{i}')
+for a, i in enumerate(['LIGHTBROWN', 'LILAC', 'BROWN', 'GOLDEN-BROWN', 'DARKBROWN', 'CHOCOLATE']):
+    sprites.make_group('voithexspeckledtabby', (a, 2), f'speckledtabby{i}')
+for a, i in enumerate(['PEACHYELLOW', 'MOCHA', 'METALLICBRONZE', 'WALNUT', 'FOX', 'ESPRESSO', 'PALEORANGE', 'PALECARMINE', 'CARAMEL', 'SIENNA2', 'VANILLA', 'MUSHROOM', 'COFFEE', 'RICHGOLD', 'MOCCACCINO', 'PALEBROWN', 'DUSTYPINK', 'GRASSY']):
+    sprites.make_group('voithexpeltsspeckledtabby', (a, 0), f'speckledtabby{i}')
+for a, i in enumerate(['CLOUD', 'VAMPIRE', 'DOVE', 'GRAVEL', 'SLATEGREY', 'ICE', 'CADETBLUE', 'OLDLAVENDER', 'COMET', 'MIDGREY', 'IRONGREY', 'DUST', 'VIOLET', 'DARKVIOLET', 'BLUEVIOLET', 'CHARCOAL', 'ASH', 'PALEVIOLET']):
+    sprites.make_group('voithexpeltsspeckledtabby', (a, 1), f'speckledtabby{i}')
+
+# VoitheX Stain
+for a, i in enumerate(['WHITE', 'PALEGREY', 'SILVER', 'GREY', 'DARKGREY', 'GHOST', 'BLACK']):
+    sprites.make_group('voithexstain', (a, 0), f'stain{i}')
+for a, i in enumerate(['CREAM', 'PALEGINGER', 'GOLDEN', 'GINGER', 'DARKGINGER', 'SIENNA']):
+    sprites.make_group('voithexstain', (a, 1), f'stain{i}')
+for a, i in enumerate(['LIGHTBROWN', 'LILAC', 'BROWN', 'GOLDEN-BROWN', 'DARKBROWN', 'CHOCOLATE']):
+    sprites.make_group('voithexstain', (a, 2), f'stain{i}')
+for a, i in enumerate(['PEACHYELLOW', 'MOCHA', 'METALLICBRONZE', 'WALNUT', 'FOX', 'ESPRESSO', 'PALEORANGE', 'PALECARMINE', 'CARAMEL', 'SIENNA2', 'VANILLA', 'MUSHROOM', 'COFFEE', 'RICHGOLD', 'MOCCACCINO', 'PALEBROWN', 'DUSTYPINK', 'GRASSY']):
+    sprites.make_group('voithexpeltsstain', (a, 0), f'stain{i}')
+for a, i in enumerate(['CLOUD', 'VAMPIRE', 'DOVE', 'GRAVEL', 'SLATEGREY', 'ICE', 'CADETBLUE', 'OLDLAVENDER', 'COMET', 'MIDGREY', 'IRONGREY', 'DUST', 'VIOLET', 'DARKVIOLET', 'BLUEVIOLET', 'CHARCOAL', 'ASH', 'PALEVIOLET']):
+    sprites.make_group('voithexpeltsstain', (a, 1), f'stain{i}')
 
 # new new torties
 for a, i in enumerate(['ONE', 'TWO', 'THREE', 'FOUR', 'REDTAIL', 'DELILAH', 'HALF', 'STREAK', 'MASK']):
