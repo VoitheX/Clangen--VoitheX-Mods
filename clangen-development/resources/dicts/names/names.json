@@ -54,7 +54,9 @@
     "Sokoke": ["stripe", "feather", "leaf", "stripe", "fern"],
     "Agouti": ["back", "pelt", "fur"],
     "Singlestripe": ["stripe", "streak", "back", "shade", "stem", "shadow"],
-    "VSokoke": ["stripe", "feather", "leaf", "stripe", "fern"]
+    "VSokoke": ["stripe", "feather", "leaf", "stripe", "fern"],
+    "SpeckledTabby": ["stripe", "feather", "leaf", "stripe", "shade", "dapple", "speckle", "spot", "speck", "freckle", "stripe", "feather", "leaf", "stripe", "shade"],
+    "Stain": ["dapple", "speckle", "spot", "speck", "freckle"]
   },
   "tortie_pelt_suffixes": {
     "solid": ["dapple", "speckle", "spots", "splash"],
@@ -69,7 +71,9 @@
     "classic": ["stripe", "feather", "fern"],
     "sokoke": ["stripe", "feather", "fern", "shade", "dapple"],
     "agouti": ["back", "pelt", "fur", "dapple", "splash"],
-    "vsokoke": ["stripe", "feather", "leaf", "stripe", "fern"]
+    "vsokoke": ["stripe", "feather", "leaf", "stripe", "fern"],
+    "speckledtabby": ["stripe", "feather", "leaf", "stripe", "shade", "dapple", "speckle", "spot", "speck", "freckle", "stripe", "feather", "leaf", "stripe", "shade"],
+    "stain": ["dapple", "speckle", "spot", "speck", "freckle"]
   },
 
   "normal_prefixes": [
