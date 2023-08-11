@@ -96,9 +96,9 @@ class Pelt():
     ]
 
     tabbies = ["Tabby", "Ticked", "Mackerel", "Classic", "Sokoke", "Agouti", "VSokoke"]
-    spotted = ["Speckled", "Rosette"]
+    spotted = ["Speckled", "Rosette", "SpeckledTabby"]
     plain = ["SingleColour", "TwoColour", "Smoke", "Singlestripe"]
-    exotic = ["Bengal", "Marbled"]
+    exotic = ["Bengal", "Marbled", "Stain"]
     torties = ["Tortie", "Calico"]
     pelt_categories = [tabbies, spotted, plain, exotic, torties]
 
