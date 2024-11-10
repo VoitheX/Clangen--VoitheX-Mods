@@ -1,10 +1,11 @@
 import random
 
-from scripts.cat.cats import Cat, INJURIES
-from scripts.events_module.generate_events import GenerateEvents, OngoingEvent
-from scripts.utility import event_text_adjust, change_clan_relations, change_relationship_values, get_med_cats
-from scripts.game_structure.game_essentials import game
+from scripts.cat.cats import Cat
 from scripts.event_class import Single_Event
+from scripts.events_module.generate_events import GenerateEvents
+from scripts.game_structure.game_essentials import game
+from scripts.utility import get_alive_status_cats
+
 
 # ---------------------------------------------------------------------------- #
 #                            Disaster Event Class                              #
@@ -13,12 +14,7 @@ from scripts.event_class import Single_Event
 class DisasterEvents():
     """All events with a connection to disasters."""
 
-    def __init__(self) -> None:
-        self.event_sums = 0
-        self.had_one_event = False
-        self.generate_events = GenerateEvents()
-        pass
-
+    @staticmethod
     def handle_disasters(self):
         """ 
         This function handles the disasters
@@ -38,7 +34,7 @@ class DisasterEvents():
 
         print('new disaster')
 
-        possible_events = self.generate_events.possible_ongoing_events("disasters")
+        possible_events = GenerateEvents.possible_ongoing_events("disasters")
         final_events = []
 
         for event in possible_events:
@@ -127,7 +123,7 @@ class DisasterEvents():
                         Single_Event(event, "misc"))
 
                     # now grab all the disaster's info and save it
-                    secondary_disaster = self.generate_events.possible_ongoing_events(
+                    secondary_disaster = GenerateEvents.possible_ongoing_events(
                                                                     "disasters",
                                                                     specific_event=secondary_disaster["disaster"])
                     game.clan.secondary_disaster = secondary_disaster
@@ -166,7 +162,7 @@ class DisasterEvents():
 
         leader = Cat.fetch_cat(game.clan.leader)
         deputy = Cat.fetch_cat(game.clan.deputy)
-        med_cats = get_med_cats(Cat, working=False)
+        med_cats = get_alive_status_cats(Cat, ["medicine cat", "medicine cat apprentice"], sort=True)
 
         # checking if there are cats of the specified rank
         if not leader.dead and not leader.outside:

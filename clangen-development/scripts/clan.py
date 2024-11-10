@@ -8,35 +8,37 @@ TODO: Docs
 
 # pylint: enable=line-too-long
 
-import random
-from random import choice, randint
 import os
+import random
+import statistics
+from random import choice, randint
 
 import pygame
-
-from scripts.cat.history import History
-from scripts.events_module.generate_events import OngoingEvent
-from scripts.housekeeping.datadir import get_save_dir
-
 import ujson
-import statistics
 
-from scripts.game_structure.game_essentials import game
-from scripts.housekeeping.version import get_version_info, SAVE_VERSION_NUMBER
-from scripts.utility import update_sprite, get_current_season, quit  # pylint: disable=redefined-builtin
 from scripts.cat.cats import Cat, cat_class
+from scripts.cat.history import History
 from scripts.cat.names import names
-from scripts.clan_resources.freshkill import Freshkill_Pile, Nutrition
-from scripts.cat.sprites import spriteSize
-from sys import exit  # pylint: disable=redefined-builtin
+from scripts.cat.sprites import sprites
+from scripts.clan_resources.freshkill import FreshkillPile, Nutrition
+from scripts.events_module.generate_events import OngoingEvent
+from scripts.game_structure.game_essentials import game
+from scripts.housekeeping.datadir import get_save_dir
+from scripts.housekeeping.version import get_version_info, SAVE_VERSION_NUMBER
+from scripts.utility import (
+    get_current_season,
+    quit,
+    clan_symbol_sprite,
+)  # pylint: disable=redefined-builtin
 
 
-class Clan():
+class Clan:
     """
 
     TODO: Docs
 
     """
+
     BIOME_TYPES = ["Forest", "Plains", "Mountainous", "Beach"]
 
     CAT_TYPES = [
@@ -58,444 +60,141 @@ class Clan():
     darkforest_cats = []
     unknown_cats = []
     seasons = [
-        'Newleaf',
-        'Newleaf',
-        'Newleaf',
-        'Greenleaf',
-        'Greenleaf',
-        'Greenleaf',
-        'Leaf-fall',
-        'Leaf-fall',
-        'Leaf-fall',
-        'Leaf-bare',
-        'Leaf-bare',
-        'Leaf-bare',
+        "Newleaf",
+        "Newleaf",
+        "Newleaf",
+        "Greenleaf",
+        "Greenleaf",
+        "Greenleaf",
+        "Leaf-fall",
+        "Leaf-fall",
+        "Leaf-fall",
+        "Leaf-bare",
+        "Leaf-bare",
+        "Leaf-bare",
     ]
 
-    layouts = {
-        "default": {
-            'leader den': (688, 200),
-            'medicine den': (210, 400),
-            'nursery': (1240, 400),
-            'clearing': (635, 570),
-            'apprentice den': (140, 820),
-            'warrior den': (1230, 880),
-            'elder den': (696, 980),
-            'leader place': [([750, 390], "xy"), ([920, 205], "xy"),
-                             ([950, 538], "xy")],
-            'medicine place': [([160, 540], "xy"), ([254, 570], "xy"),
-                               ([416, 546], "xy"), ([330, 660], "xy"),
-                               ([80, 368], "xy")],
-            'nursery place': [([1170, 600], "xy"), ([1200, 500], "xy"),
-                              ([1300, 500], "xy"), ([1070, 600], "xy"),
-                              ([1970, 600], "xy"), ([1270, 600], "xy"),
-                              ([1370, 600], "xy"), ([1060, 700], "xy"),
-                              ([1160, 700], "xy"), ([1260, 700], "xy"),
-                              ([1360, 700], "xy")],
-            'clearing place': [([710, 640], "xy"), ([590, 700], "xy"),
-                               ([750, 740], "xy"), ([870, 720], "xy"),
-                               ([650, 810], "xy"), ([800, 840], "xy"),
-                               ([950, 820], "xy")],
-            'apprentice place': [([140, 920], "xy"), ([250, 940], "xy"),
-                                 ([330, 920], "xy"), ([240, 1040], "xy"),
-                                 ([300, 1020], "xy"), ([70, 990], "xy")],
-            'warrior place': [([1260, 980], "xy"), ([1378, 1000], "xy"),
-                              ([1480, 1052], "xy"), ([1214, 1050], "xy"),
-                              ([1415, 1162], "xy"), ([1310, 1150], "xy"),
-                              ([1254, 1100], "xy"), ([1340, 1070], "xy")],
-            'elder place': [([890, 1140], "xy"), ([700, 1040], "xy"),
-                            ([800, 1040], "xy"), ([690, 1140], "xy"),
-                            ([790, 1140], "xy")]
-        },
-        "Forestcamp2": {
-            'leader den': (688, 188),
-            'medicine den': (160, 400),
-            'nursery': (1240, 400),
-            'clearing': (720, 589),
-            'apprentice den': (164, 860),
-            'warrior den': (1180, 860),
-            'elder den': (696, 980),
-            'leader place': [([650, 248], "y"), ([764, 224], "y"),
-                             ([976, 232], "y"), ([806, 344], "xy")],
-            'medicine place': [([94, 468], "xy"), ([204, 514], "xy"),
-                               ([314, 514], "xy"), ([322, 628], "xy"),
-                               ([426, 606], "xy")],
-            'nursery place': [([1120, 542], "xy"), ([1228, 554], "xy"),
-                              ([1318, 608], "xy"), ([1424, 540], "xy"),
-                              ([1436, 638], "xy"), ([1114, 660], "xy"),
-                              ([1220, 694], "xy"), ([1316, 724], "xy"),
-                              ([1424, 732], "xy")],
-            'clearing place': [([382, 268], "xy"), ([642, 404], "xy"),
-                               ([750, 454], "xy"), ([852, 456], "xy"),
-                               ([958, 396], "xy"), ([896, 558], "xy"),
-                               ([928, 664], "xy"), ([788, 676], "xy"),
-                               ([676, 656], "xy"), ([558, 644], "xy"),
-                               ([592, 752], "xy"), ([712, 780], "xy"),
-                               ([818, 782], "xy")],
-            'apprentice place': [([446, 826], "xy"), ([378, 924], "xy"),
-                                 ([258, 914], "xy"), ([148, 948], "xy"),
-                                 ([160, 1062], "xy"), ([280, 1026], "xy"),
-                                 ([86, 1172], "xy"), ([192, 1160], "xy")],
-            'warrior place': [([1004, 906], "xy"), ([1116, 966], "xy"),
-                              ([1234, 1028], "xy"), ([1354, 1026], "xy"),
-                              ([1422, 886], "xy"), ([1106, 1110], "xy"),
-                              ([1216, 1162], "xy"), ([1320, 1144], "xy")],
-            'elder place': [([728, 944], "xy"), ([620, 1080], "xy"),
-                            ([728, 1066], "xy"), ([838, 1064], "xy"),
-                            ([748, 1174], "xy"), ([444, 1204], "xy"),
-                            ([552, 1226], "xy")]
-        },
-        "Forestcamp3": {
-            'leader den': (688, 188),
-            'medicine den': (160, 400),
-            'nursery': (1240, 400),
-            'clearing': (720, 589),
-            'apprentice den': (164, 860),
-            'warrior den': (1180, 860),
-            'elder den': (696, 980),
-            'leader place': [([1200, 80], "xy"), ([720, 230], "xy"),
-                             ([700, 320], "xy"), ([800, 310], "xy")],
-            'medicine place': [([300, 550], "xy"), ([200, 530], "xy"),
-                               ([400, 530], "xy"), ([200, 670], "xy"),
-                               ([400, 630], "xy"), ([330, 450], "xy")],
-            'nursery place': [([1040, 350], "xy"), ([1240, 420], "xy"),
-                              ([1100, 500], "xy"), ([1200, 500], "xy"),
-                              ([1300, 500], "xy"), ([1070, 600], "xy"),
-                              ([1170, 600], "xy"), ([1270, 600], "xy"),
-                              ([1160, 700], "xy"), ([1300, 700], "xy")],
-            'clearing place': [([500, 400], "xy"), ([750, 640], "xy"),
-                               ([500, 650], "xy"), ([600, 450], "xy"),
-                               ([710, 460], "xy"), ([820, 420], "xy"),
-                               ([370, 720], "xy"), ([900, 720], "xy"),
-                               ([600, 740], "xy"), ([700, 740], "xy"),
-                               ([800, 740], "xy"), ([700, 840], "xy"),
-                               ([800, 840], "xy"), ([900, 900], "xy")],
-            'apprentice place': [([400, 840], "xy"), ([140, 940], "xy"),
-                                 ([240, 940], "xy"), ([340, 940], "xy"),
-                                 ([300, 1040], "xy"), ([400, 1040], "xy"),
-                                 ([350, 1140], "xy")],
-            'warrior place': [([1400, 940], "xy"), ([1200, 940], "xy"),
-                              ([1100, 980], "xy"), ([1300, 980], "xy"),
-                              ([1400, 1040], "xy"), ([1200, 1040], "xy"),
-                              ([1100, 1080], "xy"), ([1300, 1080], "xy")],
-            'elder place': [([560, 910], "xy"), ([700, 1040], "xy"),
-                            ([800, 1040], "xy"), ([640, 1140], "xy"),
-                            ([740, 1140], "xy"), ([840, 1140], "xy")]
-        },
-        "Mountainouscamp1": {
-            'leader den': (798, 188),
-            'medicine den': (122, 338),
-            'nursery': (1270, 368),
-            'clearing': (720, 589),
-            'apprentice den': (164, 802),
-            'warrior den': (1180, 860),
-            'elder den': (696, 980),
-            "leader place": [([769, 246], "xy"), ([874, 276], "xy"),
-                             ([642, 308], "xy"), ([649, 199], "xy"),
-                             ([759, 345], "xy")],
-            "medicine place": [([26, 407], "xy"), ([134, 466], "xy"),
-                               ([242, 476], "xy"), ([350, 493], "xy"),
-                               ([464, 504], "xy"), ([578, 458], "xy"),
-                               ([110, 572], "xy"), ([218, 588], "xy"),
-                               ([327, 610], "xy")],
-            "nursery place": [([1138, 116], "xy"), ([1188, 222], "xy"),
-                              ([968, 508], "xy"), ([968, 638], "xy"),
-                              ([1142, 468], "xy"), ([1107, 578], "xy"),
-                              ([1082, 684], "xy"), ([1252, 482], "xy"),
-                              ([1217, 594], "xy"), ([1190, 702], "xy"),
-                              ([1304, 704], "xy"), ([1352, 598], "xy"),
-                              ([1356, 492], "xy"), ([1458, 504], "xy"),
-                              ([1410, 700], "xy")],
-            "clearing place": [([548, 616], "xy"), ([658, 648], "xy"),
-                               ([762, 648], "xy"), ([513, 862], "xy"),
-                               ([616, 754], "xy"), ([724, 754], "xy"),
-                               ([832, 756], "xy"), ([942, 754], "xy"),
-                               ([510, 730], "xy"), ([617, 856], "xy"),
-                               ([724, 856], "xy")],
-            'apprentice place': [([56, 850], "xy"), ([166, 887], "xy"),
-                                 ([272, 887], "xy"), ([380, 887], "xy"),
-                                 ([40, 962], "xy"), ([150, 994], "xy"),
-                                 ([262, 994], "xy"), ([369, 1024], "xy")],
-            'warrior place': [([1028, 888], "xy"), ([1136, 922], "xy"),
-                              ([1246, 934], "xy"), ([1354, 932], "xy"),
-                              ([1462, 902], "xy"), ([1016, 995], "xy"),
-                              ([1124, 1067], "xy"), ([1246, 1042], "xy"),
-                              ([1354, 1068], "xy"), ([1462, 1010], "xy"),
-                              ([1482, 1188], "xy")],
-            'elder place': [([624, 1044], "xy"), ([728, 1058], "xy"),
-                            ([830, 1062], "xy"), ([580, 1148], "xy"),
-                            ([688, 1162], "xy"), ([798, 1168], "xy"),
-                            ([901, 1166], "xy"), ([1010, 1134], "xy")]
-        },
-        "Mountainouscamp2": {
-            'leader den': (798, 186),
-            'medicine den': (68, 372),
-            'nursery': (1178, 326),
-            'clearing': (720, 589),
-            'apprentice den': (164, 860),
-            'warrior den': (1180, 860),
-            'elder den': (696, 980),
-            "leader place": [([694, 222], 'x'), ([726, 322], 'xy'),
-                             ([826, 311], 'xy'), ([840, 482], 'x')],
-            "medicine place": [([14, 658], 'xy'), ([196, 524], 'xy'),
-                               ([300, 500], 'xy'), ([408, 550], 'xy'),
-                               ([200, 624], 'xy'), ([304, 600], 'xy'),
-                               ([406, 652], 'xy')],
-            "nursery place": [([1108, 474], 'x'),
-                              ([1280, 440], 'xy'), ([1214, 540], 'xy'),
-                              ([1314, 540], 'xy'), ([1414, 496], 'y'),
-                              ([1170, 640], 'xy'), ([1272, 640], 'xy'),
-                              ([1274, 640], 'xy'), ([1170, 740], 'xy'),
-                              ([1272, 740], 'xy'), ([1470, 740], 'xy')],
-            "clearing place": [([360, 262], 'x'), ([528, 252], 'xy'),
-                               ([584, 420], 'xy'), ([598, 592], 'xy'),
-                               ([532, 694], 'xy'), ([522, 798], 'xy'),
-                               ([566, 902], 'xy'), ([632, 698], 'xy'),
-                               ([626, 800], 'xy'), ([762, 648], 'xy'),
-                               ([734, 752], 'xy'), ([834, 750], 'y'),
-                               ([886, 628], 'xy'), ([967, 769], 'xy'),
-                               ([858, 850], 'xy'), ([730, 856], 'xy')],
-            'apprentice place': [([136, 916], 'xy'), ([238, 920], 'xy'),
-                                 ([340, 928], 'xy'), ([138, 1018], 'xy'),
-                                 ([240, 1022], 'xy'), ([340, 1030], 'xy'),
-                                 ([324, 1162], 'xy'), ([426, 1134], 'xy')],
-            'warrior place': [([1072, 856], 'y'), ([1092, 960], 'xy'),
-                              ([1096, 1060], 'xy'), ([1192, 922], 'xy'),
-                              ([1198, 1024], 'xy'), ([1198, 1126], 'xy'),
-                              ([1294, 918], 'xy'), ([1302, 1034], 'xy'),
-                              ([1300, 1138], 'xy'), ([1396, 934], 'xy'),
-                              ([1406, 1034], 'xy'), ([1400, 1134], 'xy')],
-            'elder place': [([652, 1038], 'xy'), ([752, 1038], 'xy'),
-                            ([856, 1038], 'xy'), ([960, 1020], 'xy'),
-                            ([628, 1140], 'xy'), ([730, 1140], 'xy'),
-                            ([832, 1140], 'xy')]
-        },
-        "Mountainouscamp3": {
-            'leader den': (956, 191),
-            'medicine den': (70, 300),
-            'nursery': (1378, 350),
-            'clearing': (799, 500),
-            'apprentice den': (77, 825),
-            'warrior den': (1226, 786),
-            'elder den': (672, 888),
-            "leader place": [([1049, 514], 'xy'), ([797, 211], 'xy'),
-                             ([678, 272], 'xy'), ([817, 315], 'xy')],
-            "medicine place": [([358, 356], ''), ([159, 510], 'xy'),
-                               ([401, 594], 'xy'),
-                               ([331, 487], 'xy'), ([471, 475], 'xy'),
-                               ([269, 606], '')],
-            "nursery place": [([1237, 288], 'x'),
-                              ([1188, 502], 'xy'), ([1299, 489], 'xy'),
-                              ([1401, 463], 'xy'), ([1126, 637], 'y'),
-                              ([1243, 598], 'xy'), ([1245, 698], 'xy'),
-                              ([1344, 627], 'xy'), ([1444, 672], 'xy')],
-            "clearing place": [([643, 534], 'x'), ([764, 571], 'xy'),
-                               ([657, 641], 'xy'), ([827, 690], 'xy'),
-                               ([971, 665], 'xy'), ([719, 747], 'xy'),
-                               ([924, 807], '')],
-            'apprentice place': [([114, 842], 'xy'), ([235, 874], 'xy'),
-                                 ([344, 868], 'xy'), ([135, 950], 'xy'),
-                                 ([159, 1047], 'xy'), ([282, 938], 'xy'),
-                                 ([534, 895], 'xy')],
-            'warrior place': [([1116, 903], 'y'), ([1254, 868], 'xy'),
-                              ([1364, 924], 'xy'), ([1469, 844], ''),
-                              ([1221, 1014], 'xy'), ([1321, 1026], 'xy'),
-                              ([1426, 1020], 'xy'), ([1124, 1094], 'xy'),
-                              ([1245, 1133], 'xy')],
-            'elder place': [([727, 979], 'xy'), ([616, 1032], 'xy'),
-                            ([786, 1083], 'xy'), ([534, 1137], 'xy'),
-                            ([663, 1153], 'xy'), ([842, 1190], 'xy')]
-        },
-        "Beachcamp1": {
-            'leader den': (798, 188),
-            'medicine den': (122, 338),
-            'nursery': (1234, 334),
-            'clearing': (720, 589),
-            'apprentice den': (164, 802),
-            'warrior den': (1180, 860),
-            'elder den': (696, 946),
-            "leader place": [([762, 258], "xy"), ([700, 358], "xy"),
-                             ([834, 372], "xy")],
-            "medicine place": [([164, 498], "xy"), ([274, 462], "xy"),
-                               ([204, 604], "xy"), ([322, 566], "xy"),
-                               ([438, 516], "xy")],
-            "nursery place": [([1148, 102], "xy"), ([1078, 406], ""),
-                              ([1192, 438], "xy"), ([1308, 470], "xy"),
-                              ([1414, 490], "xy"), ([1044, 552], "x"),
-                              ([1184, 538], "xy"), ([1304, 570], "xy"),
-                              ([1172, 648], "x"), ([1318, 688], "x"),
-                              ([1418, 700], "x")],
-            "clearing place": [([568, 529], "xy"), ([704, 452], "xy"),
-                               ([842, 475], "xy"), ([558, 660], "x"),
-                               ([530, 744], ""), ([614, 824], "x"),
-                               ([738, 786], ""), ([850, 840], "x"),
-                               ([886, 618], "x"), ([1008, 680], "")],
-            'apprentice place': [([250, 744], ""), ([128, 952], "xy"),
-                                 ([250, 910], "xy"), ([354, 920], "xy"),
-                                 ([464, 864], "xy"), ([226, 1046], "xy"),
-                                 ([336, 1022], "xy")],
-            'warrior place': [([1126, 934], "xy"), ([1248, 898], "xy"),
-                              ([1380, 912], "xy"), ([1132, 1054], "xy"),
-                              ([1252, 1008], "xy"), ([1404, 1020], "xy"),
-                              ([1300, 1104], "xy")],
-            'elder place': [([688, 1000], "xy"), ([802, 1000], "xy"),
-                            ([652, 1134], "xy"), ([780, 1136], "xy")]
-        },
-        "Beachcamp3": {
-            'leader den': [688, 188],
-            'medicine den': [160, 400],
-            'nursery': [1240, 400],
-            'clearing': [720, 589],
-            'apprentice den': [164, 860],
-            'warrior den': [1180, 860],
-            'elder den': [696, 980],
-            'leader place': [([502, 284], "xy"), ([735, 275], "xy"),
-                             ([614, 248], "xy")],
-            'medicine place': [([262, 582], "xy"), ([406, 561], "xy"),
-                               ([575, 520], "xy"), ([404, 684], "xy"),
-                               ([542, 616], "xy")],
-            'nursery place': [([1046, 558], "xy"), ([1164, 576], "xy"),
-                              ([1266, 476], "xy"), ([1080, 698], "xy"),
-                              ([1204, 688], "xy"), ([1318, 640], "xy"),
-                              ([1368, 784], "xy"), ([966, 738], "xy")],
-            'clearing place': [([688, 628], "xy"), ([862, 622], "xy"),
-                               ([596, 740], "xy"), ([706, 730], "xy"),
-                               ([816, 754], "xy"), ([714, 842], "xy")],
-            'apprentice place': [([50, 596], "xy"), ([118, 876], "xy"),
-                                 ([226, 886], "xy"), ([154, 1014], "xy"),
-                                 ([268, 1016], "xy"), ([174, 1122], "xy"),
-                                 ([402, 946], "xy")],
-            'warrior place': [([1068, 816], "xy"), ([1076, 1058], "xy"),
-                              ([1188, 1000], "xy"), ([1300, 962], "xy"),
-                              ([1416, 980], "xy"), ([1306, 1066], "xy"),
-                              ([1188, 1112], "xy")],
-            'elder place': [([524, 1002], "xy"), ([632, 1080], "xy"),
-                            ([810, 1026], "xy"), ([754, 1142], "xy"),
-                            ([86, 1162], "xy"), ([432, 1104], "xy")]
-        },
-        "Plainscamp2": {
-            'leader den': (830, 189),
-            'medicine den': (22, 348),
-            'nursery': (1240, 400),
-            'clearing': (742, 528),
-            'apprentice den': (212, 820),
-            'warrior den': (1180, 860),
-            'elder den': (858, 980),
-            'leader place': [([722, 220], 'xy'), ([898, 292], ''),
-                             ([798, 322], 'xy'), ([698, 340], 'xy')],
-            'medicine place': [([136, 496], 'xy'), ([238, 494], 'xy'),
-                               ([340, 502], 'xy'), ([186, 598], 'xy'),
-                               ([290, 604], 'xy'), ([110, 746], '')],
-            'nursery place': [([1010, 572], 'xy'), ([1112, 552], 'xy'),
-                              ([1214, 494], 'xy'), ([1316, 466], 'xy'),
-                              ([1348, 567], 'xy'), ([1246, 596], 'xy'),
-                              ([1144, 624], 'xy'), ([1042, 674], 'xy'),
-                              ([1144, 728], 'xy'), ([1248, 698], 'xy'),
-                              ([1340, 670], 'xy')],
-            'clearing place': [([330, 270], 'xy'), ([1190, 30], 'x'),
-                               ([534, 418], 'y'), ([540, 520], 'y'),
-                               ([524, 624], 'xy'), ([530, 726], 'xy'),
-                               ([574, 828], 'xy'), ([640, 588], 'xy'),
-                               ([638, 690], 'xy'), ([676, 794], 'xy'),
-                               ([730, 896], 'xy'), ([740, 594], 'xy'),
-                               ([734, 694], 'xy'), ([778, 794], 'xy'),
-                               ([840, 584], 'xy'), ([836, 694], 'xy'),
-                               ([880, 794], 'xy')],
-            'apprentice place': [([129, 922], 'xy'), ([231, 927], 'xy'),
-                                 ([334, 927], 'xy'), ([440, 897], ''),
-                                 ([171, 1026], 'xy'), ([281, 1027], 'xy'),
-                                 ([383, 1028], 'xy')],
-            'warrior place': [([1106, 974], 'xy'), ([1104, 1078], 'xy'),
-                              ([1212, 926], 'xy'), ([1206, 1026], 'xy'),
-                              ([1206, 1129], 'xy'), ([1314, 948], 'xy'),
-                              ([1312, 1050], 'xy'), ([1414, 1028], 'y'),
-                              ([1374, 1160], '')],
-            'elder place': [([700, 1038], 'xy'), ([803, 1046], 'xy'),
-                            ([882, 1164], 'xy'), ([780, 1146], 'xy'),
-                            ([678, 1146], 'xy'), ([576, 1162], 'xy')]
-        },
+    temperament_dict = {
+        "low_social": ["cunning", "proud", "bloodthirsty"],
+        "mid_social": ["amiable", "stoic", "wary"],
+        "high_social": ["gracious", "mellow", "logical"],
     }
 
+    with open("resources/placements.json", "r") as read_file:
+        layouts = ujson.loads(read_file.read())
+
     age = 0
-    current_season = 'Newleaf'
+    current_season = "Newleaf"
     all_clans = []
 
-    def __init__(self,
-                 name="",
-                 leader=None,
-                 deputy=None,
-                 medicine_cat=None,
-                 biome='Forest',
-                 camp_bg=None,
-                 game_mode='classic',
-                 starting_members=[],
-                 starting_season='Newleaf'):
+    def __init__(
+        self,
+        name="",
+        leader=None,
+        deputy=None,
+        medicine_cat=None,
+        biome="Forest",
+        camp_bg=None,
+        symbol=None,
+        game_mode="classic",
+        starting_members=[],
+        starting_season="Newleaf",
+        self_run_init_functions=True,
+    ):
         self.history = History()
         if name == "":
             return
-        
+
         self.name = name
         self.leader = leader
-        if self.leader:
-            self.leader.status_change('leader')
-            self.clan_cats.append(self.leader.ID)
         self.leader_lives = 9
         self.leader_predecessors = 0
         self.deputy = deputy
-        if deputy is not None:
-            self.deputy.status_change('deputy')
-            self.clan_cats.append(self.deputy.ID)
         self.deputy_predecessors = 0
         self.medicine_cat = medicine_cat
         self.med_cat_list = []
         self.med_cat_predecessors = 0
-        if medicine_cat is not None:
-            self.clan_cats.append(self.medicine_cat.ID)
-            self.med_cat_list.append(self.medicine_cat.ID)
-            if medicine_cat.status != 'medicine cat':
-                Cat.all_cats[medicine_cat.ID].status_change('medicine cat')
+
         self.med_cat_number = len(
             self.med_cat_list
         )  # Must do this after the medicine cat is added to the list.
         self.herbs = {}
         self.age = 0
-        self.current_season = 'Newleaf'
+        self.current_season = "Newleaf"
         self.starting_season = starting_season
         self.instructor = None
         # This is the first cat in starclan, to "guide" the other dead cats there.
         self.biome = biome
         self.camp_bg = camp_bg
+        self.chosen_symbol = symbol
         self.game_mode = game_mode
         self.pregnancy_data = {}
         self.inheritance = {}
-        
-        """
-        Reputation is for loners/kittypets/outsiders in general that wish to join the clan. 
-        it's a range from 1-100, with 30-70 being neutral, 71-100 being "welcoming",
-        and 1-29 being "hostile". if you're hostile to outsiders, they will VERY RARELY show up.
-        """
+        self.custom_pronouns = []
+
+        # Init Settings
+        self.clan_settings = {}
+        self.setting_lists = {}
+        with open("resources/clansettings.json", "r") as read_file:
+            _settings = ujson.loads(read_file.read())
+
+        for setting, values in _settings["__other"].items():
+            self.clan_settings[setting] = values[0]
+            self.setting_lists[setting] = values
+
+        all_settings = []
+        all_settings.append(_settings["general"])
+        all_settings.append(_settings["role"])
+        all_settings.append(_settings["relation"])
+        all_settings.append(_settings["freshkill_tactics"])
+        all_settings.append(_settings["clan_focus"])
+
+        for setting in all_settings:  # Add all the settings to the settings dictionary
+            for setting_name, inf in setting.items():
+                self.clan_settings[setting_name] = inf[2]
+                self.setting_lists[setting_name] = [inf[2], not inf[2]]
+
+        # Reputation is for loners/kittypets/outsiders in general that wish to join the clan.
+        # it's a range from 1-100, with 30-70 being neutral, 71-100 being "welcoming",
+        # and 1-29 being "hostile". if you're hostile to outsiders, they will VERY RARELY show up.
         self._reputation = 80
-        
+
         self.starting_members = starting_members
-        if game_mode in ['expanded', 'cruel season']:
-            self.freshkill_pile = Freshkill_Pile()
+        if game_mode in ["expanded", "cruel season"]:
+            self.freshkill_pile = FreshkillPile()
         else:
             self.freshkill_pile = None
         self.primary_disaster = None
         self.secondary_disaster = None
         self.war = {
             "at_war": False,
-            "enemy": None, 
+            "enemy": None,
             "duration": 0,
         }
+        self.last_focus_change = None
+        self.clans_in_focus = []
 
-        self.faded_ids = [
-        ]  # Stores ID's of faded cats, to ensure these IDs aren't reused.
+        self.faded_ids = (
+            []
+        )  # Stores ID's of faded cats, to ensure these IDs aren't reused.
+        if self_run_init_functions:
+            self.post_initialization_functions()
 
-        # This only contains one thing right now, but will be expanded. 
-        self.clan_settings = {
-            "show_fav": True
-        }
+    # The clan couldn't save itself in time due to issues arising, for example, from this function: "if deputy is not None: self.deputy.status_change('deputy') -> game.clan.remove_med_cat(self)"
+    def post_initialization_functions(self):
+        if self.deputy is not None:
+            self.deputy.status_change("deputy")
+            self.clan_cats.append(self.deputy.ID)
+
+        if self.leader:
+            self.leader.status_change("leader")
+            self.clan_cats.append(self.leader.ID)
+
+        if self.medicine_cat is not None:
+            self.clan_cats.append(self.medicine_cat.ID)
+            self.med_cat_list.append(self.medicine_cat.ID)
+            if self.medicine_cat.status != "medicine cat":
+                Cat.all_cats[self.medicine_cat.ID].status_change("medicine cat")
 
     def create_clan(self):
         """
@@ -503,9 +202,21 @@ class Clan():
         created in the 'clan created' screen, not every time
         the program starts
         """
-        self.instructor = Cat(status=choice(["apprentice", "mediator apprentice", "medicine cat apprentice", "warrior",
-                                             "medicine cat", "leader", "mediator", "deputy", "elder"]),
-                              )
+        self.instructor = Cat(
+            status=choice(
+                [
+                    "apprentice",
+                    "mediator apprentice",
+                    "medicine cat apprentice",
+                    "warrior",
+                    "medicine cat",
+                    "leader",
+                    "mediator",
+                    "deputy",
+                    "elder",
+                ]
+            ),
+        )
         self.instructor.dead = True
         self.instructor.dead_for = randint(20, 200)
         self.add_cat(self.instructor)
@@ -520,59 +231,75 @@ class Clan():
                 if Cat.all_cats[i] == x:
                     self.add_cat(Cat.all_cats[i])
                     not_found = False
-            if Cat.all_cats[i] != self.leader and Cat.all_cats[i] != \
-                    self.medicine_cat and Cat.all_cats[i] != \
-                    self.deputy and Cat.all_cats[i] != \
-                    self.instructor \
-                    and not_found:
+            if (
+                Cat.all_cats[i] != self.leader
+                and Cat.all_cats[i] != self.medicine_cat
+                and Cat.all_cats[i] != self.deputy
+                and Cat.all_cats[i] != self.instructor
+                and not_found
+            ):
                 Cat.all_cats[i].example = True
                 self.remove_cat(Cat.all_cats[i].ID)
 
         # give thoughts,actions and relationships to cats
         for cat_id in Cat.all_cats:
             Cat.all_cats.get(cat_id).init_all_relationships()
-            Cat.all_cats.get(cat_id).backstory = 'clan_founder'
-            if Cat.all_cats.get(cat_id).status == 'apprentice':
-                Cat.all_cats.get(cat_id).status_change('apprentice')
+            Cat.all_cats.get(cat_id).backstory = "clan_founder"
+            if Cat.all_cats.get(cat_id).status == "apprentice":
+                Cat.all_cats.get(cat_id).status_change("apprentice")
             Cat.all_cats.get(cat_id).thoughts()
 
         game.save_cats()
         number_other_clans = randint(3, 5)
         for _ in range(number_other_clans):
-            self.all_clans.append(OtherClan())
+            other_clan_names = [str(i.name) for i in self.all_clans] + [game.clan.name]
+            other_clan_name = choice(names.names_dict["normal_prefixes"] + names.names_dict["clan_prefixes"])
+            while other_clan_name in other_clan_names:
+                other_clan_name = choice(names.names_dict["normal_prefixes"] + names.names_dict["clan_prefixes"])
+            other_clan = OtherClan(name=other_clan_name)
+            self.all_clans.append(other_clan)
         self.save_clan()
         game.save_clanlist(self.name)
-        game.switches['clan_list'] = game.read_clans()
+        game.switches["clan_list"] = game.read_clans()
         # if map_available:
         #    save_map(game.map_info, game.clan.name)
 
         # CHECK IF CAMP BG IS SET -fail-safe in case it gets set to None-
-        if game.switches['camp_bg'] is None:
-            random_camp_options = ['camp1', 'camp2']
+        if game.switches["camp_bg"] is None:
+            random_camp_options = ["camp1", "camp2"]
             random_camp = choice(random_camp_options)
-            game.switches['camp_bg'] = random_camp
+            game.switches["camp_bg"] = random_camp
 
         # if no game mode chosen, set to Classic
-        if game.switches['game_mode'] is None:
-            game.switches['game_mode'] = 'classic'
-        if game.switches['game_mode'] == 'cruel_season':
-            game.settings['disasters'] = True
+        if game.switches["game_mode"] is None:
+            game.switches["game_mode"] = "classic"
+            self.game_mode = "classic"
+        # if game.switches['game_mode'] == 'cruel_season':
+        #    game.settings['disasters'] = True
 
         # set the starting season
         season_index = self.seasons.index(self.starting_season)
         self.current_season = self.seasons[season_index]
 
     def add_cat(self, cat):  # cat is a 'Cat' object
-        """ Adds cat into the list of clan cats"""
+        """Adds cat into the list of clan cats"""
         if cat.ID in Cat.all_cats and cat.ID not in self.clan_cats:
             self.clan_cats.append(cat.ID)
+
+    def add_pronouns(self, pronouns):  # pronouns is a dict
+        self.custom_pronouns.append(pronouns)
 
     def add_to_starclan(self, cat):  # Same as add_cat
         """
         Places the dead cat into StarClan.
         It should not be removed from the list of cats in the clan
         """
-        if cat.ID in Cat.all_cats and cat.dead and cat.ID not in self.starclan_cats and cat.df is False:
+        if (
+            cat.ID in Cat.all_cats
+            and cat.dead
+            and cat.ID not in self.starclan_cats
+            and cat.df is False
+        ):
             # The dead-value must be set to True before the cat can go to starclan
             self.starclan_cats.append(cat.ID)
             if cat.ID in self.darkforest_cats:
@@ -620,7 +347,12 @@ class Clan():
         """
         TODO: DOCS
         """
-        if cat.ID in Cat.all_cats and not cat.outside and cat.ID in Cat.outside_cats:
+        if (
+            cat.ID in Cat.all_cats
+            and not cat.outside
+            and not cat.dead
+            and cat.ID in Cat.outside_cats
+        ):
             # The outside-value must be set to True before the cat can go to cotc
             Cat.outside_cats.pop(cat.ID)
             cat.clan = str(game.clan.name)
@@ -645,7 +377,7 @@ class Clan():
 
         if ID in Cat.all_cats:
             Cat.all_cats.pop(ID)
-        
+
         if ID in self.clan_cats:
             self.clan_cats.remove(ID)
         if ID in self.starclan_cats:
@@ -657,12 +389,14 @@ class Clan():
 
     def __repr__(self):
         if self.name is not None:
-            _ = f'{self.name}: led by {self.leader.name}' \
-                f'with {self.medicine_cat.name} as med. cat'
+            _ = (
+                f"{self.name}: led by {self.leader.name}"
+                f"with {self.medicine_cat.name} as med. cat"
+            )
             return _
 
         else:
-            return 'No Clan'
+            return "No Clan"
 
     def new_leader(self, leader):
         """
@@ -671,10 +405,10 @@ class Clan():
         if leader:
             self.history.add_lead_ceremony(leader)
             self.leader = leader
-            Cat.all_cats[leader.ID].status_change('leader')
+            Cat.all_cats[leader.ID].status_change("leader")
             self.leader_predecessors += 1
             self.leader_lives = 9
-        game.switches['new_leader'] = None
+        game.switches["new_leader"] = None
 
     def new_deputy(self, deputy):
         """
@@ -682,7 +416,7 @@ class Clan():
         """
         if deputy:
             self.deputy = deputy
-            Cat.all_cats[deputy.ID].status_change('deputy')
+            Cat.all_cats[deputy.ID].status_change("deputy")
             self.deputy_predecessors += 1
 
     def new_medicine_cat(self, medicine_cat):
@@ -690,8 +424,8 @@ class Clan():
         TODO: DOCS
         """
         if medicine_cat:
-            if medicine_cat.status != 'medicine cat':
-                Cat.all_cats[medicine_cat.ID].status_change('medicine cat')
+            if medicine_cat.status != "medicine cat":
+                Cat.all_cats[medicine_cat.ID].status_change("medicine cat")
             if medicine_cat.ID not in self.med_cat_list:
                 self.med_cat_list.append(medicine_cat.ID)
             medicine_cat = self.med_cat_list[0]
@@ -710,7 +444,8 @@ class Clan():
                 if medicine_cat.ID == self.medicine_cat.ID:
                     if game.clan.med_cat_list:
                         game.clan.medicine_cat = Cat.fetch_cat(
-                            game.clan.med_cat_list[0])
+                            game.clan.med_cat_list[0]
+                        )
                         game.clan.med_cat_number = len(game.clan.med_cat_list)
                     else:
                         game.clan.medicine_cat = None
@@ -733,7 +468,10 @@ class Clan():
             "clanage": self.age,
             "biome": self.biome,
             "camp_bg": self.camp_bg,
+            "clan_symbol": self.chosen_symbol,
             "gamemode": self.game_mode,
+            "last_focus_change": self.last_focus_change,
+            "clans_in_focus": self.clans_in_focus,
             "instructor": self.instructor.ID,
             "reputation": self.reputation,
             "mediated": game.mediated,
@@ -741,7 +479,8 @@ class Clan():
             "temperament": self.temperament,
             "version_name": SAVE_VERSION_NUMBER,
             "version_commit": get_version_info().version_number,
-            "source_build": get_version_info().is_source_build
+            "source_build": get_version_info().is_source_build,
+            "custom_pronouns": self.custom_pronouns,
         }
 
         # LEADER DATA
@@ -770,7 +509,7 @@ class Clan():
         clan_data["med_cat_predecessors"] = self.med_cat_predecessors
 
         # LIST OF CLAN CATS
-        clan_data['clan_cats'] = ",".join([str(i) for i in self.clan_cats])
+        clan_data["clan_cats"] = ",".join([str(i) for i in self.clan_cats])
 
         clan_data["faded_cats"] = ",".join([str(i) for i in self.faded_ids])
 
@@ -779,12 +518,16 @@ class Clan():
 
         # OTHER CLANS
         # Clan Names
-        clan_data["other_clans_names"] = ",".join(
-            [str(i.name) for i in self.all_clans])
+        clan_data["other_clans_names"] = ",".join([str(i.name) for i in self.all_clans])
         clan_data["other_clans_relations"] = ",".join(
-            [str(i.relations) for i in self.all_clans])
+            [str(i.relations) for i in self.all_clans]
+        )
         clan_data["other_clan_temperament"] = ",".join(
-            [str(i.temperament) for i in self.all_clans])
+            [str(i.temperament) for i in self.all_clans]
+        )
+        clan_data["other_clan_chosen_symbol"] = ",".join(
+            [str(i.chosen_symbol) for i in self.all_clans]
+        )
         clan_data["war"] = self.war
 
         self.save_herbs(game.clan)
@@ -792,18 +535,37 @@ class Clan():
         self.save_pregnancy(game.clan)
 
         self.save_clan_settings()
-        if game.clan.game_mode in ['expanded', 'cruel season']:
+        if game.clan.game_mode in ["expanded", "cruel season"]:
             self.save_freshkill_pile(game.clan)
 
         game.safe_save(f"{get_save_dir()}/{self.name}clan.json", clan_data)
 
-        if os.path.exists(get_save_dir() + f'/{self.name}clan.txt'):
-            os.remove(get_save_dir() + f'/{self.name}clan.txt')
+        if os.path.exists(get_save_dir() + f"/{self.name}clan.txt") & (self.name != 'current'):
+            os.remove(get_save_dir() + f"/{self.name}clan.txt")
+
+    def switch_setting(self, setting_name):
+        """Call this function to change a setting given in the parameter by one to the right on it's list"""
+        self.settings_changed = True
+
+        # Give the index that the list is currently at
+        list_index = self.setting_lists[setting_name].index(
+            self.clan_settings[setting_name]
+        )
+
+        if (
+            list_index == len(self.setting_lists[setting_name]) - 1
+        ):  # The option is at the list's end, go back to 0
+            self.clan_settings[setting_name] = self.setting_lists[setting_name][0]
+        else:
+            # Else move on to the next item on the list
+            self.clan_settings[setting_name] = self.setting_lists[setting_name][
+                list_index + 1
+            ]
 
     def save_clan_settings(self):
-        with open(get_save_dir() + f'/{self.name}/clan_settings.json', 'w',
-                  encoding='utf-8') as write_file:
-            write_file.write(ujson.dumps(self.clan_settings, indent=4))
+        game.safe_save(
+            get_save_dir() + f"/{self.name}/clan_settings.json", self.clan_settings
+        )
 
     def load_clan(self):
         """
@@ -811,17 +573,18 @@ class Clan():
         """
 
         version_info = None
-        if os.path.exists(get_save_dir() + '/' + game.switches['clan_list'][0] +
-                          'clan.json'):
+        if os.path.exists(
+            get_save_dir() + "/" + game.switches["clan_list"][0] + "clan.json"
+        ):
             version_info = self.load_clan_json()
-        elif os.path.exists(get_save_dir() + '/' + game.switches['clan_list'][0] +
-                            'clan.txt'):
+        elif os.path.exists(
+            get_save_dir() + "/" + game.switches["clan_list"][0] + "clan.txt"
+        ):
             self.load_clan_txt()
         else:
-            game.switches[
-                'error_message'] = "There was an error loading the clan.json"
+            game.switches["error_message"] = "There was an error loading the clan.json"
 
-        self.load_clan_settings()
+        game.clan.load_clan_settings()
 
         return version_info
 
@@ -830,110 +593,130 @@ class Clan():
         TODO: DOCS
         """
         other_clans = []
-        if game.switches['clan_list'] == '':
+        if game.switches["clan_list"] == "":
             number_other_clans = randint(3, 5)
             for _ in range(number_other_clans):
                 self.all_clans.append(OtherClan())
             return
-        if game.switches['clan_list'][0].strip() == '':
+        if game.switches["clan_list"][0].strip() == "":
             number_other_clans = randint(3, 5)
             for _ in range(number_other_clans):
                 self.all_clans.append(OtherClan())
             return
-        game.switches[
-            'error_message'] = "There was an error loading the clan.txt"
-        with open(get_save_dir() + '/' + game.switches['clan_list'][0] + 'clan.txt',
-                  'r',
-                  encoding='utf-8') as read_file:  # pylint: disable=redefined-outer-name
+        game.switches["error_message"] = "There was an error loading the clan.txt"
+        with open(
+            get_save_dir() + "/" + game.switches["clan_list"][0] + "clan.txt",
+            "r",
+            encoding="utf-8",
+        ) as read_file:  # pylint: disable=redefined-outer-name
             clan_data = read_file.read()
-        clan_data = clan_data.replace('\t', ',')
-        sections = clan_data.split('\n')
+        clan_data = clan_data.replace("\t", ",")
+        sections = clan_data.split("\n")
         if len(sections) == 7:
-            general = sections[0].split(',')
-            leader_info = sections[1].split(',')
-            deputy_info = sections[2].split(',')
-            med_cat_info = sections[3].split(',')
+            general = sections[0].split(",")
+            leader_info = sections[1].split(",")
+            deputy_info = sections[2].split(",")
+            med_cat_info = sections[3].split(",")
             instructor_info = sections[4]
-            members = sections[5].split(',')
-            other_clans = sections[6].split(',')
+            members = sections[5].split(",")
+            other_clans = sections[6].split(",")
         elif len(sections) == 6:
-            general = sections[0].split(',')
-            leader_info = sections[1].split(',')
-            deputy_info = sections[2].split(',')
-            med_cat_info = sections[3].split(',')
+            general = sections[0].split(",")
+            leader_info = sections[1].split(",")
+            deputy_info = sections[2].split(",")
+            med_cat_info = sections[3].split(",")
             instructor_info = sections[4]
-            members = sections[5].split(',')
+            members = sections[5].split(",")
             other_clans = []
         else:
-            general = sections[0].split(',')
-            leader_info = sections[1].split(',')
+            general = sections[0].split(",")
+            leader_info = sections[1].split(",")
             deputy_info = 0, 0
-            med_cat_info = sections[2].split(',')
+            med_cat_info = sections[2].split(",")
             instructor_info = sections[3]
-            members = sections[4].split(',')
+            members = sections[4].split(",")
             other_clans = []
         if len(general) == 9:
-            if general[3] == 'None':
-                general[3] = 'camp1'
-            elif general[4] == 'None':
+            if general[3] == "None":
+                general[3] = "camp1"
+            elif general[4] == "None":
                 general[4] = 0
-            elif general[7] == 'None':
-                general[7] = 'classic'
-            elif general[8] == 'None':
+            elif general[7] == "None":
+                general[7] = "classic"
+            elif general[8] == "None":
                 general[8] = 50
-            game.clan = Clan(general[0],
-                             Cat.all_cats[leader_info[0]],
-                             Cat.all_cats.get(deputy_info[0], None),
-                             Cat.all_cats.get(med_cat_info[0], None),
-                             biome=general[2],
-                             camp_bg=general[3],
-                             game_mode=general[7])
-            game.clan.reputation = general[8]
-        elif len(general) == 8:
-            if general[3] == 'None':
-                general[3] = 'camp1'
-            elif general[4] == 'None':
-                general[4] = 0
-            elif general[7] == 'None':
-                general[7] = 'classic'
             game.clan = Clan(
-                general[0],
-                Cat.all_cats[leader_info[0]],
-                Cat.all_cats.get(deputy_info[0], None),
-                Cat.all_cats.get(med_cat_info[0], None),
+                name=general[0],
+                leader=Cat.all_cats[leader_info[0]],
+                deputy=Cat.all_cats.get(deputy_info[0], None),
+                medicine_cat=Cat.all_cats.get(med_cat_info[0], None),
                 biome=general[2],
                 camp_bg=general[3],
                 game_mode=general[7],
+                self_run_init_functions=False,
             )
-        elif len(general) == 7:
-            if general[4] == 'None':
+            game.clan.post_initialization_functions()
+            game.clan.reputation = general[8]
+        elif len(general) == 8:
+            if general[3] == "None":
+                general[3] = "camp1"
+            elif general[4] == "None":
                 general[4] = 0
-            elif general[3] == 'None':
-                general[3] = 'camp1'
+            elif general[7] == "None":
+                general[7] = "classic"
+            game.clan = Clan(
+                name=general[0],
+                leader=Cat.all_cats[leader_info[0]],
+                deputy=Cat.all_cats.get(deputy_info[0], None),
+                medicine_cat=Cat.all_cats.get(med_cat_info[0], None),
+                biome=general[2],
+                camp_bg=general[3],
+                game_mode=general[7],
+                self_run_init_functions=False,
+            )
+            game.clan.post_initialization_functions()
+        elif len(general) == 7:
+            if general[4] == "None":
+                general[4] = 0
+            elif general[3] == "None":
+                general[3] = "camp1"
+            game.clan = Clan(
+                name=general[0],
+                leader=Cat.all_cats[leader_info[0]],
+                deputy=Cat.all_cats.get(deputy_info[0], None),
+                medicine_cat=Cat.all_cats.get(med_cat_info[0], None),
+                biome=general[2],
+                camp_bg=general[3],
+                self_run_init_functions=False,
+            )
+            game.clan.post_initialization_functions()
+        elif len(general) == 3:
+            game.clan = Clan(
+                name=general[0],
+                leader=Cat.all_cats[leader_info[0]],
+                deputy=Cat.all_cats.get(deputy_info[0], None),
+                medicine_cat=Cat.all_cats.get(med_cat_info[0], None),
+                biome=general[2],
+                self_run_init_functions=False,
+            )
+            game.clan.post_initialization_functions()
+        else:
             game.clan = Clan(
                 general[0],
                 Cat.all_cats[leader_info[0]],
                 Cat.all_cats.get(deputy_info[0], None),
                 Cat.all_cats.get(med_cat_info[0], None),
-                biome=general[2],
-                camp_bg=general[3],
+                self_run_init_functions=False,
             )
-        elif len(general) == 3:
-            game.clan = Clan(general[0], Cat.all_cats[leader_info[0]],
-                             Cat.all_cats.get(deputy_info[0], None),
-                             Cat.all_cats.get(med_cat_info[0], None),
-                             general[2])
-        else:
-            game.clan = Clan(general[0], Cat.all_cats[leader_info[0]],
-                             Cat.all_cats.get(deputy_info[0], None),
-                             Cat.all_cats.get(med_cat_info[0], None))
+            game.clan.post_initialization_functions()
         game.clan.age = int(general[1])
-        if not game.config['lock_season']:
+        if not game.config["lock_season"]:
             game.clan.current_season = game.clan.seasons[game.clan.age % 12]
         else:
             game.clan.current_season = game.clan.starting_season
         game.clan.leader_lives, game.clan.leader_predecessors = int(
-            leader_info[1]), int(leader_info[2])
+            leader_info[1]
+        ), int(leader_info[2])
 
         if len(deputy_info) > 1:
             game.clan.deputy_predecessors = int(deputy_info[1])
@@ -946,17 +729,18 @@ class Clan():
                 game.clan.instructor = Cat.all_cats[instructor_info]
                 game.clan.add_cat(game.clan.instructor)
         else:
-            game.clan.instructor = Cat(
-                status=choice(["warrior", "warrior", "elder"]))
+            game.clan.instructor = Cat(status=choice(["warrior", "warrior", "elder"]))
             # update_sprite(game.clan.instructor)
             game.clan.instructor.dead = True
             game.clan.add_cat(game.clan.instructor)
         if other_clans != [""]:
             for other_clan in other_clans:
-                other_clan_info = other_clan.split(';')
+                other_clan_info = other_clan.split(";")
                 self.all_clans.append(
-                    OtherClan(other_clan_info[0], int(other_clan_info[1]),
-                              other_clan_info[2]))
+                    OtherClan(
+                        other_clan_info[0], int(other_clan_info[1]), other_clan_info[2]
+                    )
+                )
 
         else:
             number_other_clans = randint(3, 5)
@@ -968,31 +752,36 @@ class Clan():
                 game.clan.add_cat(Cat.all_cats[cat])
                 game.clan.add_to_starclan(Cat.all_cats[cat])
             else:
-                print('WARNING: Cat not found:', cat)
+                print("WARNING: Cat not found:", cat)
         self.load_pregnancy(game.clan)
-        game.switches['error_message'] = ''
+
+        # assigning a symbol, since this save would be too old to have a chosen symbol
+        game.clan.chosen_symbol = clan_symbol_sprite(game.clan, return_string=True)
+
+        game.switches["error_message"] = ""
 
     def load_clan_json(self):
         """
         TODO: DOCS
         """
         other_clans = []
-        if game.switches['clan_list'] == '':
+        if game.switches["clan_list"] == "":
             number_other_clans = randint(3, 5)
             for _ in range(number_other_clans):
                 self.all_clans.append(OtherClan())
             return
-        if game.switches['clan_list'][0].strip() == '':
+        if game.switches["clan_list"][0].strip() == "":
             number_other_clans = randint(3, 5)
             for _ in range(number_other_clans):
                 self.all_clans.append(OtherClan())
             return
 
-        game.switches[
-            'error_message'] = "There was an error loading the clan.json"
-        with open(get_save_dir() + '/' + game.switches['clan_list'][0] + 'clan.json',
-                  'r',
-                  encoding='utf-8') as read_file:  # pylint: disable=redefined-outer-name
+        game.switches["error_message"] = "There was an error loading the clan.json"
+        with open(
+            get_save_dir() + "/" + game.switches["clan_list"][0] + "clan.json",
+            "r",
+            encoding="utf-8",
+        ) as read_file:  # pylint: disable=redefined-outer-name
             clan_data = ujson.loads(read_file.read())
 
         if clan_data["leader"]:
@@ -1012,19 +801,26 @@ class Clan():
         else:
             med_cat = None
 
-        game.clan = Clan(clan_data["clanname"],
-                         leader,
-                         deputy,
-                         med_cat,
-                         biome=clan_data["biome"],
-                         camp_bg=clan_data["camp_bg"],
-                         game_mode=clan_data["gamemode"])
+        game.clan = Clan(
+            name=clan_data["clanname"],
+            leader=leader,
+            deputy=deputy,
+            medicine_cat=med_cat,
+            biome=clan_data["biome"],
+            camp_bg=clan_data["camp_bg"],
+            game_mode=clan_data["gamemode"],
+            self_run_init_functions=False,
+        )
+        game.clan.post_initialization_functions()
 
         game.clan.reputation = int(clan_data["reputation"])
 
         game.clan.age = clan_data["clanage"]
-        game.clan.starting_season = clan_data[
-            "starting_season"] if "starting_season" in clan_data else 'Newleaf'
+        game.clan.starting_season = (
+            clan_data["starting_season"]
+            if "starting_season" in clan_data
+            else "Newleaf"
+        )
         get_current_season()
 
         game.clan.leader_lives = leader_lives
@@ -1033,23 +829,44 @@ class Clan():
         game.clan.deputy_predecessors = clan_data["deputy_predecessors"]
         game.clan.med_cat_predecessors = clan_data["med_cat_predecessors"]
         game.clan.med_cat_number = clan_data["med_cat_number"]
+        # Allows for the custom pronouns to show up in the add pronoun list after the game has closed and reopened.
+        if "custom_pronouns" in clan_data.keys():
+            if clan_data["custom_pronouns"]:
+                game.clan.custom_pronouns = clan_data["custom_pronouns"]
 
         # Instructor Info
         if clan_data["instructor"] in Cat.all_cats:
             game.clan.instructor = Cat.all_cats[clan_data["instructor"]]
             game.clan.add_cat(game.clan.instructor)
         else:
-            game.clan.instructor = Cat(
-                status=choice(["warrior", "warrior", "elder"]))
+            game.clan.instructor = Cat(status=choice(["warrior", "warrior", "elder"]))
             # update_sprite(game.clan.instructor)
             game.clan.instructor.dead = True
             game.clan.add_cat(game.clan.instructor)
 
-        for name, relation, temper in zip(
+        # check for symbol
+        if "clan_symbol" in clan_data:
+            game.clan.chosen_symbol = clan_data["clan_symbol"]
+        else:
+            game.clan.chosen_symbol = clan_symbol_sprite(game.clan, return_string=True)
+
+        if "other_clan_chosen_symbol" not in clan_data:
+            for name, relation, temper in zip(
                 clan_data["other_clans_names"].split(","),
                 clan_data["other_clans_relations"].split(","),
-                clan_data["other_clan_temperament"].split(",")):
-            game.clan.all_clans.append(OtherClan(name, int(relation), temper))
+                clan_data["other_clan_temperament"].split(","),
+            ):
+                game.clan.all_clans.append(OtherClan(name, int(relation), temper))
+        else:
+            for name, relation, temper, symbol in zip(
+                clan_data["other_clans_names"].split(","),
+                clan_data["other_clans_relations"].split(","),
+                clan_data["other_clan_temperament"].split(","),
+                clan_data["other_clan_chosen_symbol"].split(","),
+            ):
+                game.clan.all_clans.append(
+                    OtherClan(name, int(relation), temper, symbol)
+                )
 
         for cat in clan_data["clan_cats"].split(","):
             if cat in Cat.all_cats:
@@ -1058,7 +875,7 @@ class Clan():
                 game.clan.add_to_darkforest(Cat.all_cats[cat])
                 game.clan.add_to_unknown(Cat.all_cats[cat])
             else:
-                print('WARNING: Cat not found:', cat)
+                print("WARNING: Cat not found:", cat)
         if "war" in clan_data:
             game.clan.war = clan_data["war"]
 
@@ -1066,6 +883,9 @@ class Clan():
             if clan_data["faded_cats"].strip():  # Check for empty string
                 for cat in clan_data["faded_cats"].split(","):
                     game.clan.faded_ids.append(cat)
+
+        game.clan.last_focus_change = clan_data.get("last_focus_change")
+        game.clan.clans_in_focus = clan_data.get("clans_in_focus", [])
 
         # Patrolled cats
         if "patrolled_cats" in clan_data:
@@ -1083,20 +903,29 @@ class Clan():
         self.load_disaster(game.clan)
         if game.clan.game_mode != "classic":
             self.load_freshkill_pile(game.clan)
-        game.switches['error_message'] = ''
+        game.switches["error_message"] = ""
 
-        # Return Version Info. 
+        # Return Version Info.
         return {
             "version_name": clan_data.get("version_name"),
             "version_commit": clan_data.get("version_commit"),
-            "source_build": clan_data.get("source_build")
+            "source_build": clan_data.get("source_build"),
         }
 
     def load_clan_settings(self):
-        if os.path.exists(get_save_dir() + f'/{game.switches["clan_list"][0]}/clan_settings.json'):
-            with open(get_save_dir() + f'/{game.switches["clan_list"][0]}/clan_settings.json', 'r',
-                      encoding='utf-8') as write_file:
-                game.clan.clan_settings = ujson.loads(write_file.read())
+        if os.path.exists(
+            get_save_dir() + f'/{game.switches["clan_list"][0]}/clan_settings.json'
+        ):
+            with open(
+                get_save_dir() + f'/{game.switches["clan_list"][0]}/clan_settings.json',
+                "r",
+                encoding="utf-8",
+            ) as write_file:
+                _load_settings = ujson.loads(write_file.read())
+
+        for key, value in _load_settings.items():
+            if key in self.clan_settings:
+                self.clan_settings[key] = value
 
     def load_herbs(self, clan):
         """
@@ -1106,7 +935,9 @@ class Clan():
             return
         file_path = get_save_dir() + f"/{game.clan.name}/herbs.json"
         if os.path.exists(file_path):
-            with open(file_path, 'r', encoding='utf-8') as read_file:  # pylint: disable=redefined-outer-name
+            with open(
+                file_path, "r", encoding="utf-8"
+            ) as read_file:  # pylint: disable=redefined-outer-name
                 clan.herbs = ujson.loads(read_file.read())
 
         else:
@@ -1115,7 +946,7 @@ class Clan():
             random_herbs = random.choices(HERBS, k=random.randrange(3, 8))
             for herb in random_herbs:
                 herbs.update({herb: random.randint(1, 3)})
-            with open(file_path, 'w', encoding='utf-8') as rel_file:
+            with open(file_path, "w", encoding="utf-8") as rel_file:
                 json_string = ujson.dumps(herbs, indent=4)
                 rel_file.write(json_string)
             clan.herbs = herbs
@@ -1137,7 +968,9 @@ class Clan():
             return
         file_path = get_save_dir() + f"/{game.clan.name}/pregnancy.json"
         if os.path.exists(file_path):
-            with open(file_path, 'r', encoding='utf-8') as read_file:  # pylint: disable=redefined-outer-name
+            with open(
+                file_path, "r", encoding="utf-8"
+            ) as read_file:  # pylint: disable=redefined-outer-name
                 clan.pregnancy_data = ujson.load(read_file)
         else:
             clan.pregnancy_data = {}
@@ -1149,7 +982,9 @@ class Clan():
         if not game.clan.name:
             return
 
-        game.safe_save(f"{get_save_dir()}/{game.clan.name}/pregnancy.json", clan.pregnancy_data)
+        game.safe_save(
+            f"{get_save_dir()}/{game.clan.name}/pregnancy.json", clan.pregnancy_data
+        )
 
     def load_disaster(self, clan):
         """
@@ -1161,27 +996,32 @@ class Clan():
         file_path = get_save_dir() + f"/{game.clan.name}/disasters/primary.json"
         try:
             if os.path.exists(file_path):
-                with open(file_path, 'r', encoding='utf-8') as read_file:  # pylint: disable=redefined-outer-name
+                with open(
+                    file_path, "r", encoding="utf-8"
+                ) as read_file:  # pylint: disable=redefined-outer-name
                     disaster = ujson.load(read_file)
                     if disaster:
                         clan.primary_disaster = OngoingEvent(
                             event=disaster["event"],
                             tags=disaster["tags"],
                             duration=disaster["duration"],
-                            current_duration=disaster["current_duration"]
-                            if "current_duration" else disaster["duration"],  # pylint: disable=using-constant-test
+                            current_duration=(
+                                disaster["current_duration"]
+                                if "current_duration"
+                                else disaster["duration"]
+                            ),  # pylint: disable=using-constant-test
                             trigger_events=disaster["trigger_events"],
                             progress_events=disaster["progress_events"],
                             conclusion_events=disaster["conclusion_events"],
-                            secondary_disasters=disaster[
-                                "secondary_disasters"],
-                            collateral_damage=disaster["collateral_damage"])
+                            secondary_disasters=disaster["secondary_disasters"],
+                            collateral_damage=disaster["collateral_damage"],
+                        )
                     else:
                         clan.primary_disaster = {}
             else:
                 os.makedirs(get_save_dir() + f"/{game.clan.name}/disasters")
                 clan.primary_disaster = None
-                with open(file_path, 'w', encoding='utf-8') as rel_file:
+                with open(file_path, "w", encoding="utf-8") as rel_file:
                     json_string = ujson.dumps(clan.primary_disaster, indent=4)
                     rel_file.write(json_string)
         except:
@@ -1190,26 +1030,29 @@ class Clan():
         file_path = get_save_dir() + f"/{game.clan.name}/disasters/secondary.json"
         try:
             if os.path.exists(file_path):
-                with open(file_path, 'r', encoding='utf-8') as read_file:
+                with open(file_path, "r", encoding="utf-8") as read_file:
                     disaster = ujson.load(read_file)
                     if disaster:
                         clan.secondary_disaster = OngoingEvent(
                             event=disaster["event"],
                             tags=disaster["tags"],
                             duration=disaster["duration"],
-                            current_duration=disaster["current_duration"]
-                            if "current_duration" else disaster["duration"],  # pylint: disable=using-constant-test
+                            current_duration=(
+                                disaster["current_duration"]
+                                if "current_duration"
+                                else disaster["duration"]
+                            ),  # pylint: disable=using-constant-test
                             progress_events=disaster["progress_events"],
                             conclusion_events=disaster["conclusion_events"],
-                            collateral_damage=disaster["collateral_damage"])
+                            collateral_damage=disaster["collateral_damage"],
+                        )
                     else:
                         clan.secondary_disaster = {}
             else:
                 os.makedirs(get_save_dir() + f"/{game.clan.name}/disasters")
                 clan.secondary_disaster = None
-                with open(file_path, 'w', encoding='utf-8') as rel_file:
-                    json_string = ujson.dumps(clan.secondary_disaster,
-                                              indent=4)
+                with open(file_path, "w", encoding="utf-8") as rel_file:
+                    json_string = ujson.dumps(clan.secondary_disaster, indent=4)
                     rel_file.write(json_string)
 
         except:
@@ -1222,8 +1065,8 @@ class Clan():
         if not clan.name:
             return
         file_path = get_save_dir() + f"/{clan.name}/disasters/primary.json"
-        if not os.path.isdir(f'{get_save_dir()}/{clan.name}/disasters'):
-            os.mkdir(f'{get_save_dir()}/{clan.name}/disasters')
+        if not os.path.isdir(f"{get_save_dir()}/{clan.name}/disasters"):
+            os.mkdir(f"{get_save_dir()}/{clan.name}/disasters")
         if clan.primary_disaster:
             disaster = {
                 "event": clan.primary_disaster.event,
@@ -1233,9 +1076,8 @@ class Clan():
                 "trigger_events": clan.primary_disaster.trigger_events,
                 "progress_events": clan.primary_disaster.progress_events,
                 "conclusion_events": clan.primary_disaster.conclusion_events,
-                "secondary_disasters":
-                    clan.primary_disaster.secondary_disasters,
-                "collateral_damage": clan.primary_disaster.collateral_damage
+                "secondary_disasters": clan.primary_disaster.secondary_disasters,
+                "collateral_damage": clan.primary_disaster.collateral_damage,
             }
         else:
             disaster = {}
@@ -1251,42 +1093,48 @@ class Clan():
                 "trigger_events": clan.secondary_disaster.trigger_events,
                 "progress_events": clan.secondary_disaster.progress_events,
                 "conclusion_events": clan.secondary_disaster.conclusion_events,
-                "secondary_disasters":
-                    clan.secondary_disaster.secondary_disasters,
-                "collateral_damage": clan.secondary_disaster.collateral_damage
+                "secondary_disasters": clan.secondary_disaster.secondary_disasters,
+                "collateral_damage": clan.secondary_disaster.collateral_damage,
             }
         else:
             disaster = {}
 
-        game.safe_save(f"{get_save_dir()}/{clan.name}/disasters/secondary.json", disaster)
+        game.safe_save(
+            f"{get_save_dir()}/{clan.name}/disasters/secondary.json", disaster
+        )
 
     def load_freshkill_pile(self, clan):
         """
         TODO: DOCS
         """
-        if not game.clan.name or clan.game_mode == 'classic':
+        if not game.clan.name or clan.game_mode == "classic":
             return
 
         file_path = get_save_dir() + f"/{game.clan.name}/freshkill_pile.json"
         try:
             if os.path.exists(file_path):
-                with open(file_path, 'r', encoding='utf-8') as read_file:  # pylint: disable=redefined-outer-name
+                with open(
+                    file_path, "r", encoding="utf-8"
+                ) as read_file:  # pylint: disable=redefined-outer-name
                     pile = ujson.load(read_file)
-                    clan.freshkill_pile = Freshkill_Pile(pile)
+                    clan.freshkill_pile = FreshkillPile(pile)
 
                 file_path = get_save_dir() + f"/{game.clan.name}/nutrition_info.json"
                 if os.path.exists(file_path) and clan.freshkill_pile:
-                    with open(file_path, 'r', encoding='utf-8') as read_file:
+                    with open(file_path, "r", encoding="utf-8") as read_file:
                         nutritions = ujson.load(read_file)
                         for k, nutr in nutritions.items():
                             nutrition = Nutrition()
-                            nutrition.max_score = nutr['max_score']
-                            nutrition.current_score = nutr['current_score']
+                            nutrition.max_score = nutr["max_score"]
+                            nutrition.current_score = nutr["current_score"]
                             clan.freshkill_pile.nutrition_info[k] = nutrition
+                        if len(nutritions) <= 0:
+                            for cat in Cat.all_cats_list:
+                                clan.freshkill_pile.add_cat_to_nutrition(cat)
             else:
-                clan.freshkill_pile = Freshkill_Pile()
+                clan.freshkill_pile = FreshkillPile()
         except:
-            clan.freshkill_pile = Freshkill_Pile()
+            clan.freshkill_pile = FreshkillPile()
 
     def save_freshkill_pile(self, clan):
         """
@@ -1295,7 +1143,10 @@ class Clan():
         if clan.game_mode == "classic" or not clan.freshkill_pile:
             return
 
-        game.safe_save(f"{get_save_dir()}/{game.clan.name}/freshkill_pile.json", clan.freshkill_pile.pile)
+        game.safe_save(
+            f"{get_save_dir()}/{game.clan.name}/freshkill_pile.json",
+            clan.freshkill_pile.pile,
+        )
 
         data = {}
         for k, nutr in clan.freshkill_pile.nutrition_info.items():
@@ -1320,92 +1171,150 @@ class Clan():
             self._reputation = 100
         elif self._reputation < 0:
             self._reputation = 0
-            
+
     @property
     def temperament(self):
-        """Temperment is determined whenever it's accessed. This makes sure it's always accurate to the 
-            current cats in the Clan. However, determining Clan temperment is slow! 
-            Clan temperment should be used as sparcely as possible, since
-            it's pretty resource-intensive to determine it. """
-        
-        all_cats = [i for i in Cat.all_cats_list if 
-                    i.status not in ["leader", "deputy"] and
-                    not i.dead and 
-                    not i.outside]
-        leader = Cat.fetch_cat(self.leader) if isinstance(Cat.fetch_cat(self.leader), Cat) else None 
-        deputy = Cat.fetch_cat(self.deputy) if isinstance(Cat.fetch_cat(self.deputy), Cat) else None
-        
+        """Temperament is determined whenever it's accessed. This makes sure it's always accurate to the
+        current cats in the Clan. However, determining Clan temperament is slow!
+        Clan temperament should be used as sparsely as possible, since
+        it's pretty resource-intensive to determine it."""
+
+        all_cats = [
+            i
+            for i in Cat.all_cats_list
+            if i.status not in ["leader", "deputy"] and not i.dead and not i.outside
+        ]
+        leader = (
+            Cat.fetch_cat(self.leader)
+            if isinstance(Cat.fetch_cat(self.leader), Cat)
+            else None
+        )
+        deputy = (
+            Cat.fetch_cat(self.deputy)
+            if isinstance(Cat.fetch_cat(self.deputy), Cat)
+            else None
+        )
+
         weight = 0.3
 
         if (leader or deputy) and all_cats:
-            clan_sociability = round(weight * statistics.mean([i.personality.sociability for i in [leader, deputy] if i]) + \
-                (1-weight) *  statistics.median([i.personality.sociability for i in all_cats]))
-            clan_aggression = round(weight * statistics.mean([i.personality.aggression for i in [leader, deputy] if i]) + \
-                (1-weight) *  statistics.median([i.personality.aggression for i in all_cats]))
-        elif (leader or deputy):
-            clan_sociability = round(statistics.mean([i.personality.sociability for i in [leader, deputy] if i]))
-            clan_aggression = round(statistics.mean([i.personality.aggression for i in [leader, deputy] if i]))
+            clan_sociability = round(
+                weight
+                * statistics.mean(
+                    [i.personality.sociability for i in [leader, deputy] if i]
+                )
+                + (1 - weight)
+                * statistics.median([i.personality.sociability for i in all_cats])
+            )
+            clan_aggression = round(
+                weight
+                * statistics.mean(
+                    [i.personality.aggression for i in [leader, deputy] if i]
+                )
+                + (1 - weight)
+                * statistics.median([i.personality.aggression for i in all_cats])
+            )
+        elif leader or deputy:
+            clan_sociability = round(
+                statistics.mean(
+                    [i.personality.sociability for i in [leader, deputy] if i]
+                )
+            )
+            clan_aggression = round(
+                statistics.mean(
+                    [i.personality.aggression for i in [leader, deputy] if i]
+                )
+            )
         elif all_cats:
-            clan_sociability = round(statistics.median([i.personality.sociability for i in all_cats]))
-            clan_aggression = round(statistics.median([i.personality.aggression for i in all_cats]))
+            clan_sociability = round(
+                statistics.median([i.personality.sociability for i in all_cats])
+            )
+            clan_aggression = round(
+                statistics.median([i.personality.aggression for i in all_cats])
+            )
         else:
+            print("returned default temper: stoic")
             return "stoic"
-        
-        # temperment = ['high_agress', 'med_agress', 'low agress' ]
-        if 12 <= clan_sociability:
-            _temperament = ['gracious', 'mellow', 'logical']
-        elif 5 <= clan_sociability:
-            _temperament = ['amiable', 'stoic', 'wary']
+
+        # _temperament = ['low_aggression', 'med_aggression', 'high_aggression', ]
+        if 11 <= clan_sociability:
+            _temperament = self.temperament_dict["high_social"]
+        elif 7 <= clan_sociability:
+            _temperament = self.temperament_dict["mid_social"]
         else:
-            _temperament = ['cunning', 'proud', 'bloodthirsty']
-            
-        if 12 <= clan_aggression:
+            _temperament = self.temperament_dict["low_social"]
+
+        if 11 <= clan_aggression:
             _temperament = _temperament[2]
-        elif 5 <= clan_aggression:
-            _temperament = _temperament[1] 
+        elif 7 <= clan_aggression:
+            _temperament = _temperament[1]
         else:
-            _temperament = _temperament[0] 
-        
+            _temperament = _temperament[0]
+
         return _temperament
-    
+
     @temperament.setter
     def temperament(self, val):
-        #print("Clan temperment set by member personality --> you can not set it externally.", val)
         return
-            
 
 
-class OtherClan():
+class OtherClan:
     """
     TODO: DOCS
     """
 
-    def __init__(self, name='', relations=0, temperament=''):
-        temperament_list = [
-            'cunning', 'wary', 'logical', 'proud', 'stoic', 'mellow',
-            'bloodthirsty', 'amiable', 'gracious'
-        ]
-        self.name = name or choice(names.names_dict["normal_prefixes"])
+    interaction_dict = {
+        "ally": ["offend", "praise"],
+        "neutral": ["provoke", "befriend"],
+        "hostile": ["antagonize", "appease", "declare"],
+    }
+
+    temperament_list = [
+        "cunning",
+        "wary",
+        "logical",
+        "proud",
+        "stoic",
+        "mellow",
+        "bloodthirsty",
+        "amiable",
+        "gracious",
+    ]
+
+    def __init__(self, name="", relations=0, temperament="", chosen_symbol=""):
+        clan_names = names.names_dict["normal_prefixes"]
+        clan_names.extend(names.names_dict["clan_prefixes"])
+        self.name = name or choice(clan_names)
         self.relations = relations or randint(8, 12)
-        self.temperament = temperament or choice(temperament_list)
-        if self.temperament not in temperament_list:
-            self.temperament = choice(temperament_list)
+        self.temperament = temperament or choice(self.temperament_list)
+        if self.temperament not in self.temperament_list:
+            self.temperament = choice(self.temperament_list)
+
+        self.chosen_symbol = (
+            None  # have to establish None first so that clan_symbol_sprite works
+        )
+        self.chosen_symbol = (
+            chosen_symbol
+            if chosen_symbol
+            else clan_symbol_sprite(self, return_string=True)
+        )
 
     def __repr__(self):
         return f"{self.name}Clan"
 
 
-class StarClan():
+class StarClan:
     """
     TODO: DOCS
     """
+
     forgotten_stages = {
         0: [0, 100],
         10: [101, 200],
         30: [201, 300],
         60: [301, 400],
         90: [401, 500],
-        100: [501, 502]
+        100: [501, 502],
     }  # Tells how faded the cat will be in StarClan by months spent
     dead_cats = {}
 
@@ -1419,12 +1328,13 @@ class StarClan():
         """
         TODO: DOCS
         """
-        white = pygame.Surface((spriteSize, spriteSize))
+        white = pygame.Surface((sprites.size, sprites.size))
         fade_level = 0
         if cat.dead:
             for f in self.forgotten_stages:  # pylint: disable=consider-using-dict-items
-                if cat.dead_for in range(self.forgotten_stages[f][0],
-                                         self.forgotten_stages[f][1]):
+                if cat.dead_for in range(
+                    self.forgotten_stages[f][0], self.forgotten_stages[f][1]
+                ):
                     fade_level = f
         white.fill((255, 255, 255, fade_level))
         return white
@@ -1434,5 +1344,5 @@ clan_class = Clan()
 clan_class.remove_cat(cat_class.ID)
 
 HERBS = None
-with open("resources/dicts/herbs.json", 'r', encoding='utf-8') as read_file:
+with open("resources/dicts/herbs.json", "r", encoding="utf-8") as read_file:
     HERBS = ujson.loads(read_file.read())
