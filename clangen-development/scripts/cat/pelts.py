@@ -25,23 +25,33 @@ class Pelt:
         'Masked': 'masked',
         'Tortie': None,
         'Calico': None,
+        'VSokoke': 'vsokoke',
+        'SpeckledTabby': 'speckledtabby',
+        'Stain': 'stain',
     }
 
     # ATTRIBUTES, including non-pelt related
     pelt_colours = [
         'WHITE', 'PALEGREY', 'SILVER', 'GREY', 'DARKGREY', 'GHOST', 'BLACK', 'CREAM', 'PALEGINGER',
         'GOLDEN', 'GINGER', 'DARKGINGER', 'SIENNA', 'LIGHTBROWN', 'LILAC', 'BROWN', 'GOLDEN-BROWN', 'DARKBROWN',
-        'CHOCOLATE'
+        'CHOCOLATE',
+        'PEACHYELLOW', 'MOCHA', 'METALLICBRONZE', 'WALNUT', 'FOX', 'ESPRESSO', 'PALEORANGE', 'PALECARMINE', 'CARAMEL', 'SIENNA2', 'VANILLA', 'MUSHROOM', 'COFFEE', 'RICHGOLD', 'MOCCACCINO', 'PALEBROWN', 'DUSTYPINK', 'GRASSY',
+        'CLOUD', 'VAMPIRE', 'DOVE', 'GRAVEL', 'SLATEGREY', 'ICE', 'CADETBLUE', 'OLDLAVENDER', 'COMET', 'MIDGREY', 'IRONGREY', 'DUST', 'VIOLET', 'DARKVIOLET', 'BLUEVIOLET', 'CHARCOAL', 'ASH', 'PALEVIOLET'
     ]
     pelt_c_no_white = [
         'PALEGREY', 'SILVER', 'GREY', 'DARKGREY', 'GHOST', 'BLACK', 'CREAM', 'PALEGINGER',
         'GOLDEN', 'GINGER', 'DARKGINGER', 'SIENNA', 'LIGHTBROWN', 'LILAC', 'BROWN', 'GOLDEN-BROWN', 'DARKBROWN',
-        'CHOCOLATE'
+        'CHOCOLATE',
+        'PEACHYELLOW', 'MOCHA', 'METALLICBRONZE', 'WALNUT', 'FOX', 'ESPRESSO', 'PALEORANGE', 'PALECARMINE', 'CARAMEL', 'SIENNA2', 'VANILLA', 'MUSHROOM', 'COFFEE', 'RICHGOLD', 'MOCCACCINO', 'PALEBROWN', 'DUSTYPINK', 'GRASSY',
+        'VAMPIRE', 'DOVE', 'GRAVEL', 'SLATEGREY', 'CADETBLUE', 'OLDLAVENDER', 'COMET', 'MIDGREY', 'IRONGREY', 'DUST', 'VIOLET', 'DARKVIOLET', 'BLUEVIOLET', 'CHARCOAL', 'ASH', 'PALEVIOLET',
+
     ]
     pelt_c_no_bw = [
         'PALEGREY', 'SILVER', 'GREY', 'DARKGREY', 'CREAM', 'PALEGINGER',
         'GOLDEN', 'GINGER', 'DARKGINGER', 'SIENNA', 'LIGHTBROWN', 'LILAC', 'BROWN', 'GOLDEN-BROWN', 'DARKBROWN',
-        'CHOCOLATE'
+        'CHOCOLATE',
+        'PEACHYELLOW', 'MOCHA', 'METALLICBRONZE', 'WALNUT', 'FOX', 'ESPRESSO', 'PALEORANGE', 'PALECARMINE', 'CARAMEL', 'SIENNA2', 'VANILLA', 'MUSHROOM', 'COFFEE', 'RICHGOLD', 'MOCCACCINO', 'PALEBROWN', 'DUSTYPINK', 'GRASSY',
+        'IRONGREY'
     ]
 
     tortiepatterns = ['ONE', 'TWO', 'THREE', 'FOUR', 'REDTAIL', 'DELILAH', 'MINIMALONE', 'MINIMALTWO', 'MINIMALTHREE',
@@ -52,7 +62,7 @@ class Pelt:
                       'CHEST', 'ARMTAIL', 'SMOKE', 'GRUMPYFACE',
                       'BRIE', 'BELOVED', 'BODY', 'SHILOH', 'FRECKLED', 'HEARTBEAT']
     tortiebases = ['single', 'tabby', 'bengal', 'marbled', 'ticked', 'smoke', 'rosette', 'speckled', 'mackerel',
-                   'classic', 'sokoke', 'agouti', 'singlestripe', 'masked']
+                   'classic', 'sokoke', 'agouti', 'singlestripe', 'masked', 'vsokoke', 'stain', 'speckledtabby']
 
     pelt_length = ["short", "medium", "long"]
     eye_colours = ['YELLOW', 'AMBER', 'HAZEL', 'PALEGREEN', 'GREEN', 'BLUE', 'DARKBLUE', 'GREY', 'CYAN', 'EMERALD',
@@ -100,10 +110,10 @@ class Pelt:
         "BLACKNYLON", "SPIKESNYLON", "WHITENYLON", "PINKNYLON", "PURPLENYLON", "MULTINYLON", "INDIGONYLON",
     ]
 
-    tabbies = ["Tabby", "Ticked", "Mackerel", "Classic", "Sokoke", "Agouti"]
-    spotted = ["Speckled", "Rosette"]
+    tabbies = ["Tabby", "Ticked", "Mackerel", "Classic", "Sokoke", "Agouti", 'Vsokoke']
+    spotted = ["Speckled", "Rosette", 'SpeckledTabby']
     plain = ["SingleColour", "TwoColour", "Smoke", "Singlestripe"]
-    exotic = ["Bengal", "Marbled", "Masked"]
+    exotic = ["Bengal", "Marbled", "Masked", 'Stain']
     torties = ["Tortie", "Calico"]
     pelt_categories = [tabbies, spotted, plain, exotic, torties]
 
@@ -111,12 +121,18 @@ class Pelt:
     single_colours = [
         'WHITE', 'PALEGREY', 'SILVER', 'GREY', 'DARKGREY', 'GHOST', 'BLACK', 'CREAM', 'PALEGINGER',
         'GOLDEN', 'GINGER', 'DARKGINGER', 'SIENNA', 'LIGHTBROWN', 'LILAC', 'BROWN', 'GOLDEN-BROWN', 'DARKBROWN',
-        'CHOCOLATE'
+        'CHOCOLATE',
+        'PEACHYELLOW', 'MOCHA', 'METALLICBRONZE', 'WALNUT', 'FOX', 'ESPRESSO', 'PALEORANGE', 'PALECARMINE', 'CARAMEL', 'SIENNA2', 'VANILLA', 'MUSHROOM', 'COFFEE', 'RICHGOLD', 'MOCCACCINO', 'PALEBROWN', 'DUSTYPINK', 'GRASSY',
+        'CLOUD', 'VAMPIRE', 'DOVE', 'GRAVEL', 'SLATEGREY', 'ICE', 'CADETBLUE', 'OLDLAVENDER', 'COMET', 'MIDGREY', 'IRONGREY', 'DUST', 'VIOLET', 'DARKVIOLET', 'BLUEVIOLET', 'CHARCOAL', 'ASH', 'PALEVIOLET'
     ]
-    ginger_colours = ['CREAM', 'PALEGINGER', 'GOLDEN', 'GINGER', 'DARKGINGER', 'SIENNA']
-    black_colours = ['GREY', 'DARKGREY', 'GHOST', 'BLACK']
-    white_colours = ['WHITE', 'PALEGREY', 'SILVER']
-    brown_colours = ['LIGHTBROWN', 'LILAC', 'BROWN', 'GOLDEN-BROWN', 'DARKBROWN', 'CHOCOLATE']
+    ginger_colours = ['CREAM', 'PALEGINGER', 'GOLDEN', 'GINGER', 'DARKGINGER', 'SIENNA', 
+                      'PEACHYELLOW', 'MOCHA', 'FOX', 'PALEORANGE', 'PALECARMINE', 'CARAMEL', 'SIENNA2', 'RICHGOLD', 'DUSTYPINK', 'GRASSY']
+    black_colours = ['GREY', 'DARKGREY', 'GHOST', 'BLACK',
+                    'VAMPIRE', 'DOVE', 'GRAVEL', 'SLATEGREY', 'CADETBLUE', 'OLDLAVENDER', 'COMET', 'MIDGREY', 'DUST', 'VIOLET', 'DARKVIOLET', 'BLUEVIOLET', 'CHARCOAL', 'ASH', 'PALEVIOLET']
+    white_colours = ['WHITE', 'PALEGREY', 'SILVER',
+                    'CLOUD', 'ICE']
+    brown_colours = ['LIGHTBROWN', 'LILAC', 'BROWN', 'GOLDEN-BROWN', 'DARKBROWN', 'CHOCOLATE',
+                    'METALLICBRONZE', 'WALNUT', 'ESPRESSO', 'VANILLA', 'MUSHROOM', 'COFFEE', 'MOCCACCINO', 'PALEBROWN', 'IRONGREY']
     colour_categories = [ginger_colours, black_colours, white_colours, brown_colours]
     eye_sprites = [
         'YELLOW', 'AMBER', 'HAZEL', 'PALEGREEN', 'GREEN', 'BLUE', 'DARKBLUE', 'BLUEYELLOW', 'BLUEGREEN',
@@ -128,22 +144,48 @@ class Pelt:
                     'LUNA',
                     'EXTRA', 'MUSTACHE', 'REVERSEHEART', 'SPARKLE', 'RIGHTEAR', 'LEFTEAR', 'ESTRELLA', 'REVERSEEYE',
                     'BACKSPOT',
-                    'EYEBAGS', 'LOCKET', 'BLAZEMASK', 'TEARS']
+                    'EYEBAGS', 'LOCKET', 'BLAZEMASK', 'TEARS',
+                   'BLACKLITTLE', 'BLACKLIGHTTUXEDO', 'BLACKBUZZARDFANG', 'BLACKTIP', 'BLACKBLAZE', 'BLACKBIB', 'BLACKVEE', 'BLACKPAWS', 'BLACKBELLY', 'BLACKTAILTIP', 'BLACKTOES', 'BLACKBROKENBLAZE', 'BLACKLILTWO', 'BLACKSCOURGE', 'BLACKTOESTAIL', 'BLACKRAVENPAW', 'BLACKHONEY', 'BLACKLUNA', 'BLACKEXTRA', 'BLACKMUSTACHE', 'BLACKREVERSEHEART',
+                    'BROWNLITTLE', 'BROWNLIGHTTUXEDO', 'BROWNBUZZARDFANG', 'BROWNTIP', 'BROWNBLAZE', 'BROWNBIB', 'BROWNVEE', 'BROWNPAWS', 'BROWNBELLY', 'BROWNTAILTIP', 'BROWNTOES', 'BROWNBROKENBLAZE', 'BROWNLILTWO', 'BROWNSCOURGE', 'BROWNTOESTAIL', 'BROWNRAVENPAW', 'BROWNHONEY', 'BROWNLUNA', 'BROWNEXTRA', 'BROWNMUSTACHE', 'BROWNREVERSEHEART',
+                    'GINGERLITTLE', 'GINGERLIGHTTUXEDO', 'GINGERBUZZARDFANG', 'GINGERTIP', 'GINGERBLAZE', 'GINGERBIB', 'GINGERVEE', 'GINGERPAWS', 'GINGERBELLY', 'GINGERTAILTIP', 'GINGERTOES', 'GINGERBROKENBLAZE', 'GINGERLILTWO', 'GINGERSCOURGE', 'GINGERTOESTAIL', 'GINGERRAVENPAW', 'GINGERHONEY', 'GINGERLUNA', 'GINGEREXTRA', 'GINGERMUSTACHE', 'GINGERREVERSEHEART',
+                    'BODYSTRIPE', 'BLACKBODYSTRIPE', 'BROWNBODYSTRIPE', 'GINGERBODYSTRIPE', 'SPRAYEDBODYSTRIPE', 'BLACKSPRAYEDBODYSTRIPE', 'BROWNSPRAYEDBODYSTRIPE', 'GINGERSPRAYEDBODYSTRIPE']
     mid_white = ['TUXEDO', 'FANCY', 'UNDERS', 'DAMIEN', 'SKUNK', 'MITAINE', 'SQUEAKS', 'STAR', 'WINGS',
                  'DIVA', 'SAVANNAH', 'FADESPOTS', 'BEARD', 'DAPPLEPAW', 'TOPCOVER', 'WOODPECKER', 'MISS', 'BOWTIE',
                  'VEST',
-                 'FADEBELLY', 'DIGIT', 'FCTWO', 'FCONE', 'MIA', 'ROSINA', 'PRINCESS', 'DOUGIE']
+                 'FADEBELLY', 'DIGIT', 'FCTWO', 'FCONE', 'MIA', 'ROSINA', 'PRINCESS', 'DOUGIE',
+                'BLACKTUXEDO', 'BLACKFANCY', 'BLACKUNDERS', 'BLACKDAMIEN', 'BLACKSKUNK', 'BLACKMITAINE', 'BLACKSQUEAKS', 'BLACKVOISTAR', 'BLACKWINGS', 'BLACKDIVA', 'BLACKSAVANNAH', 'BLACKFADESPOTS', 'BLACKBEARD', 'BLACKDAPPLEPAW', 'BLACKTOPCOVER', 'BLACKWOODPECKER', 'BLACKMISS', 'BLACKBOWTIE', 'BLACKVEST',
+                 'BROWNTUXEDO', 'BROWNFANCY', 'BROWNUNDERS', 'BROWNDAMIEN', 'BROWNSKUNK', 'BROWNMITAINE', 'BROWNSQUEAKS', 'BROWNVOISTAR', 'BROWNWINGS', 'BROWNDIVA', 'BROWNSAVANNAH', 'BROWNFADESPOTS', 'BROWNBEARD', 'BROWNDAPPLEPAW', 'BROWNTOPCOVER', 'BROWNWOODPECKER', 'BROWNMISS', 'BROWNBOWTIE', 'BROWNVEST',
+                 'GINGERTUXEDO', 'GINGERFANCY', 'GINGERUNDERS', 'GINGERDAMIEN', 'GINGERSKUNK', 'GINGERMITAINE', 'GINGERSQUEAKS', 'GINGERVOISTAR', 'GINGERWINGS', 'GINGERDIVA', 'GINGERSAVANNAH', 'GINGERFADESPOTS', 'GINGERBEARD', 'GINGERDAPPLEPAW', 'GINGERTOPCOVER', 'GINGERWOODPECKER', 'GINGERMISS', 'GINGERBOWTIE', 'GINGERVEST'
+                 ]
     high_white = ['ANY', 'ANYTWO', 'BROKEN', 'FRECKLES', 'RINGTAIL', 'HALFFACE', 'PANTSTWO',
                   'GOATEE', 'PRINCE', 'FAROFA', 'MISTER', 'PANTS', 'REVERSEPANTS', 'HALFWHITE', 'APPALOOSA', 'PIEBALD',
                   'CURVED', 'GLASS', 'MASKMANTLE', 'MAO', 'PAINTED', 'SHIBAINU', 'OWL', 'BUB', 'SPARROW', 'TRIXIE',
-                  'SAMMY', 'FRONT', 'BLOSSOMSTEP', 'BULLSEYE', 'FINN', 'SCAR', 'BUSTER', 'HAWKBLAZE', 'CAKE']
+                  'SAMMY', 'FRONT', 'BLOSSOMSTEP', 'BULLSEYE', 'FINN', 'SCAR', 'BUSTER', 'HAWKBLAZE', 'CAKE',
+                  'BLACKANY', 'BLACKANYTWO', 'BLACKBROKEN', 'BLACKFRECKLES', 'BLACKRINGTAIL', 'BLACKHALFFACE', 'BLACKPANTSTWO', 'BLACKGOATEE', 'BLACKPRINCE', 'BLACKFAROFA', 'BLACKMISTER', 'BLACKPANTS', 'BLACKREVERSEPANTS', 'BLACKHALFWHITE', 'BLACKAPPALOOSA', 'BLACKPIEBALD', 'BLACKCURVED', 'BLACKGLASS', 'BLACKMASKMANTLE', 'BLACKMAO', 'BLACKPAINTED', 'BLACKSHIBAINU', 'BLACKOWL', 'BLACKBUB', 'BLACKSPARROW',
+                  'BROWNANY', 'BROWNANYTWO', 'BROWNBROKEN', 'BROWNFRECKLES', 'BROWNRINGTAIL', 'BROWNHALFFACE', 'BROWNPANTSTWO', 'BROWNGOATEE', 'BROWNPRINCE', 'BROWNFAROFA', 'BROWNMISTER', 'BROWNPANTS', 'BROWNREVERSEPANTS', 'BROWNHALFWHITE', 'BROWNAPPALOOSA', 'BROWNPIEBALD', 'BROWNCURVED', 'BROWNGLASS', 'BROWNMASKMANTLE', 'BROWNMAO', 'BROWNPAINTED', 'BROWNSHIBAINU', 'BROWNOWL', 'BROWNBUB', 'BROWNSPARROW',
+                  'GINGERANY', 'GINGERANYTWO', 'GINGERBROKEN', 'GINGERFRECKLES', 'GINGERRINGTAIL', 'GINGERHALFFACE', 'GINGERPANTSTWO', 'GINGERGOATEE', 'GINGERPRINCE', 'GINGERFAROFA', 'GINGERMISTER', 'GINGERPANTS', 'GINGERREVERSEPANTS', 'GINGERHALFWHITE', 'GINGERAPPALOOSA', 'GINGERPIEBALD', 'GINGERCURVED', 'GINGERGLASS', 'GINGERMASKMANTLE', 'GINGERMAO', 'GINGERPAINTED', 'GINGERSHIBAINU', 'GINGEROWL', 'GINGERBUB', 'GINGERSPARROW',
+                  'TIGERBODYSTRIPE', 'BLACKTIGERBODYSTRIPE', 'BROWNTIGERBODYSTRIPE', 'GINGERTIGERBODYSTRIPE'
+                  ]
     mostly_white = ['VAN', 'ONEEAR', 'LIGHTSONG', 'TAIL', 'HEART', 'MOORISH', 'APRON', 'CAPSADDLE',
                     'CHESTSPECK', 'BLACKSTAR', 'PETAL', 'HEARTTWO', 'PEBBLESHINE', 'BOOTS', 'COW', 'COWTWO', 'LOVEBUG',
-                    'SHOOTINGSTAR', 'EYESPOT', 'PEBBLE', 'TAILTWO', 'BUDDY', 'KROPKA']
-    point_markings = ['COLOURPOINT', 'RAGDOLL', 'SEPIAPOINT', 'MINKPOINT', 'SEALPOINT']
-    vit = ['VITILIGO', 'VITILIGOTWO', 'MOON', 'PHANTOM', 'KARPATI', 'POWDER', 'BLEACHED', 'SMOKEY']
+                    'SHOOTINGSTAR', 'EYESPOT', 'PEBBLE', 'TAILTWO', 'BUDDY', 'KROPKA',
+                    'BLACKVAN', 'BLACKONEEAR', 'BLACKLIGHTSONG', 'BLACKTAIL', 'BLACKHEART', 'BLACKMOORISH', 'BLACKAPRON', 'BLACKCAPSADDLE', 'BLACKCHESTSPECK', 'BLACKVOIBLACKSTAR', 'BLACKPETAL', 'BLACKHEARTTWO', 'BLACKPEBBLESHINE', 'BLACKBOOTS', 'BLACKCOW', 'BLACKCOWTWO',
+                    'BROWNVAN', 'BROWNONEEAR', 'BROWNLIGHTSONG', 'BROWNTAIL', 'BROWNHEART', 'BROWNMOORISH', 'BROWNAPRON', 'BROWNCAPSADDLE', 'BROWNCHESTSPECK', 'BROWNVOIBLACKSTAR', 'BROWNPETAL', 'BROWNHEARTTWO', 'BROWNPEBBLESHINE', 'BROWNBOOTS', 'BROWNCOW', 'BROWNCOWTWO',
+                    'GINGERVAN', 'GINGERONEEAR', 'GINGERLIGHTSONG', 'GINGERTAIL', 'GINGERHEART', 'GINGERMOORISH', 'GINGERAPRON', 'GINGERCAPSADDLE', 'GINGERCHESTSPECK', 'GINGERVOIBLACKSTAR', 'GINGERPETAL', 'GINGERHEARTTWO', 'GINGERPEBBLESHINE', 'GINGERBOOTS', 'GINGERCOW', 'GINGERCOWTWO',
+                    'REVERSEBODYSPRITE', 'BLACKREVERSEBODYSPRITE', 'BROWNREVERSEBODYSPRITE', 'GINGERREVERSEBODYSPRITE', 'REVERSETIGERBODYSPRITE', 'BLACKREVERSETIGERBODYSPRITE', 'BROWNREVERSETIGERBODYSPRITE', 'GINGERREVERSETIGERBODYSPRITE', 'REVERSELEOPARDBODYSPRITE', 'BLACKREVERSELEOPARDBODYSPRITE', 'BROWNREVERSELEOPARDBODYSPRITE', 'GINGERREVERSELEOPARDBODYSPRITE'
+                    ]
+    point_markings = ['COLOURPOINT', 'RAGDOLL', 'SEPIAPOINT', 'MINKPOINT', 'SEALPOINT',
+                      'BLACKCOLOURPOINT', 'BLACKRAGDOLL', 'BLACKSEPIAPOINT', 'BLACKMINKPOINT', 'BLACKSEALPOINT',
+                      'BROWNCOLOURPOINT', 'BROWNRAGDOLL', 'BROWNSEPIAPOINT', 'BROWNMINKPOINT', 'BROWNSEALPOINT',
+                      'GINGERCOLOURPOINT', 'GINGERRAGDOLL', 'GINGERSEPIAPOINT', 'GINGERMINKPOINT', 'GINGERSEALPOINT'
+                      ]
+    vit = ['VITILIGO', 'VITILIGOTWO', 'MOON', 'PHANTOM', 'KARPATI', 'POWDER', 'BLEACHED', 'SMOKEY',
+           'BLACKVITILIGO', 'BLACKVITILIGOTWO', 'BLACKMOON', 'BLACKPHANTOM', 'BLACKKARPATI', 'BLACKPOWDER', 'BLACKBLEACHED',
+           'BROWNVITILIGO', 'BROWNVITILIGOTWO', 'BROWNMOON', 'BROWNPHANTOM', 'BROWNKARPATI', 'BROWNPOWDER', 'BROWNBLEACHED',
+           'GINGERVITILIGO', 'GINGERVITILIGOTWO', 'GINGERMOON', 'GINGERPHANTOM', 'GINGERKARPATI', 'GINGERPOWDER', 'GINGERBLEACHED'
+           ]
     white_sprites = [
-        little_white, mid_white, high_white, mostly_white, point_markings, vit, 'FULLWHITE']
+        little_white, mid_white, high_white, mostly_white, point_markings, vit, 'FULLWHITE', 'FULLBLACK', 'FULLBROWN', 'FULLGINGER']
 
     skin_sprites = ['BLACK', 'PINK', 'DARKBROWN', 'BROWN', 'LIGHTBROWN', 'DARK', 'DARKGREY', 'GREY', 'DARKSALMON',
                     'SALMON', 'PEACH', 'DARKMARBLED', 'MARBLED', 'LIGHTMARBLED', 'DARKBLUE', 'BLUE', 'LIGHTBLUE', 'RED']
@@ -707,7 +749,7 @@ class Pelt:
                     # Normal generation
                     if self.tortiebase in ["singlestripe", "smoke", "single"]:
                         self.tortiepattern = choice(['tabby', 'mackerel', 'classic', 'single', 'smoke', 'agouti',
-                                                     'ticked'])
+                                                     'ticked', 'speckledtabby'])
                     else:
                         self.tortiepattern = random.choices([self.tortiebase, 'single'], weights=[97, 3], k=1)[0]
 
@@ -759,7 +801,7 @@ class Pelt:
             _temp = par_whitepatches.copy()
             if self.name == "Tortie":
                 for p in _temp.copy():
-                    if p in Pelt.high_white + Pelt.mostly_white + ["FULLWHITE"]:
+                    if p in Pelt.high_white + Pelt.mostly_white + ["FULLWHITE", "FULLBLACK", "FULLBROWN", "FULLGINGER"]:
                         _temp.remove(p)
             elif self.name == "Calico":
                 for p in _temp.copy():
@@ -789,7 +831,7 @@ class Pelt:
         else:
             self.points = None
 
-        white_list = [Pelt.little_white, Pelt.mid_white, Pelt.high_white, Pelt.mostly_white, ['FULLWHITE']]
+        white_list = [Pelt.little_white, Pelt.mid_white, Pelt.high_white, Pelt.mostly_white, ['FULLWHITE'], ['FULLBLACK'], ['FULLBROWN'], ['FULLGINGER']]
 
         weights = [0, 0, 0, 0, 0]  # Same order as white_list
         for p_ in par_whitepatches:
@@ -836,7 +878,7 @@ class Pelt:
         )
 
         self.white_patches = chosen_white_patches
-        if self.points and self.white_patches in [Pelt.high_white, Pelt.mostly_white, 'FULLWHITE']:
+        if self.points and self.white_patches in [Pelt.high_white, Pelt.mostly_white, 'FULLWHITE', 'FULLBLACK', 'FULLBROWN', 'FULLGINGER']:
             self.points = None
 
     def randomize_white_patches(self):
@@ -987,7 +1029,10 @@ class Pelt:
             "Singlestripe": "dorsal-striped c_n",
             "Rosette": "unusually spotted c_n",
             "Sokoke": "c_n tabby",
-            "Masked": "masked c_n tabby"
+            "Masked": "masked c_n tabby",
+            "VSokoke": "c_n tabby",
+            "SpeckledTabby": "c_n speckled tabby",
+            "Stain": "stained c_n"
         }
 
         # Start with determining the base color name
