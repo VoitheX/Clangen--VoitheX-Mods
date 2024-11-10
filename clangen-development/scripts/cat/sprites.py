@@ -133,7 +133,11 @@ class Sprites:
             'shadersnewwhite', 'lightingnew',
             'whitepatches', 'tortiepatchesmasks',
             'fademask', 'fadestarclan', 'fadedarkforest',
-            'symbols'
+            'symbols',
+            'blackpatches', 'brownpatches', 'gingerpatches', 'voithexpatches',
+            'voithexpeltssokokev', 'voithexsokoke', 'voithexspeckledtabby', 'voithexstain',
+            'voithexpeltssingle', 'voithexpeltstabby', 'voithexpeltsmarbled', 'voithexpeltsrosette', 'voithexpeltssmoke', 'voithexpeltsticked', 'voithexpeltsspeckled', 'voithexpeltsbengal',
+            'voithexpeltsmackrel', 'voithexpeltsclassic', 'voithexpeltssokoke', 'voithexpeltsagouti', 'voithexpeltssinglestripe', 'voithexpeltsspeckledtabby', 'voithexpeltsstain', 'voithexpeltsmasked'
         ]:
             if 'lineart' in x and game.config['fun']['april_fools']:
                 self.spritesheet(f"sprites/aprilfools{x}.png", x)
@@ -193,6 +197,61 @@ class Sprites:
             for col, patch in enumerate(patches):
                 self.make_group('whitepatches', (col, row), f'white{patch}')
 
+white_patches = [
+            ['FULLBLACK', 'BLACKANY', 'BLACKTUXEDO', 'BLACKLITTLE', 'BLACKCOLOURPOINT', 'BLACKVAN', 'BLACKANYTWO', 'BLACKMOON', 'BLACKPHANTOM', 'BLACKPOWDER', 'BLACKBLEACHED', 'BLACKSAVANNAH', 'BLACKFADESPOTS', 'BLACKPEBBLESHINE'],
+            ['BLACKEXTRA', 'BLACKONEEAR', 'BLACKBROKEN', 'BLACKLIGHTTUXEDO', 'BLACKBUZZARDFANG', 'BLACKRAGDOLL', 'BLACKLIGHTSONG', 'BLACKVITILIGO', 'BLACKVOIBLACKSTAR', 'BLACKPIEBALD', 'BLACKCURVED', 'BLACKPETAL', 'BLACKSHIBAINU', 'BLACKOWL'],
+            ['BLACKTIP', 'BLACKFANCY', 'BLACKFRECKLES', 'BLACKRINGTAIL', 'BLACKHALFFACE', 'BLACKPANTSTWO', 'BLACKGOATEE', 'BLACKVITILIGOTWO', 'BLACKPAWS', 'BLACKMITAINE', 'BLACKBROKENBLAZE', 'BLACKSCOURGE', 'BLACKDIVA', 'BLACKBEARD'],
+            ['BLACKTAIL', 'BLACKBLAZE', 'BLACKPRINCE', 'BLACKBIB', 'BLACKVEE', 'BLACKUNDERS', 'BLACKHONEY', 'BLACKFAROFA', 'BLACKDAMIEN', 'BLACKMISTER', 'BLACKBELLY', 'BLACKTAILTIP', 'BLACKTOES', 'BLACKTOPCOVER'],
+            ['BLACKAPRON', 'BLACKCAPSADDLE', 'BLACKMASKMANTLE', 'BLACKSQUEAKS', 'BLACKVOISTAR', 'BLACKTOESTAIL', 'BLACKRAVENPAW', 'BLACKPANTS', 'BLACKREVERSEPANTS', 'BLACKSKUNK', 'BLACKKARPATI', 'BLACKHALFWHITE', 'BLACKAPPALOOSA', 'BLACKDAPPLEPAW'],
+            ['BLACKHEART', 'BLACKLILTWO', 'BLACKGLASS', 'BLACKMOORISH', 'BLACKSEPIAPOINT', 'BLACKMINKPOINT', 'BLACKSEALPOINT', 'BLACKMAO', 'BLACKLUNA', 'BLACKCHESTSPECK', 'BLACKWINGS', 'BLACKPAINTED', 'BLACKHEARTTWO', 'BLACKWOODPECKER'],
+            ['BLACKBOOTS', 'BLACKMISS', 'BLACKCOW', 'BLACKCOWTWO', 'BLACKBUB', 'BLACKBOWTIE', 'BLACKMUSTACHE', 'BLACKREVERSEHEART', 'BLACKSPARROW', 'BLACKVEST']
+        ]
+
+        for row, patches in enumerate(white_patches):
+            for col, patch in enumerate(patches):
+                self.make_group('blackpatches', (col, row), f'white{patch}')
+
+white_patches = [
+            ['FULLBROWN', 'BROWNANY', 'BROWNTUXEDO', 'BROWNLITTLE', 'BROWNCOLOURPOINT', 'BROWNVAN', 'BROWNANYTWO', 'BROWNMOON', 'BROWNPHANTOM', 'BROWNPOWDER', 'BROWNBLEACHED', 'BROWNSAVANNAH', 'BROWNFADESPOTS', 'BROWNPEBBLESHINE'],
+            ['BROWNEXTRA', 'BROWNONEEAR', 'BROWNBROKEN', 'BROWNLIGHTTUXEDO', 'BROWNBUZZARDFANG', 'BROWNRAGDOLL', 'BROWNLIGHTSONG', 'BROWNVITILIGO', 'BROWNVOIBLACKSTAR', 'BROWNPIEBALD', 'BROWNCURVED', 'BROWNPETAL', 'BROWNSHIBAINU', 'BROWNOWL'],
+            ['BROWNTIP', 'BROWNFANCY', 'BROWNFRECKLES', 'BROWNRINGTAIL', 'BROWNHALFFACE', 'BROWNPANTSTWO', 'BROWNGOATEE', 'BROWNVITILIGOTWO', 'BROWNPAWS', 'BROWNMITAINE', 'BROWNBROKENBLAZE', 'BROWNSCOURGE', 'BROWNDIVA', 'BROWNBEARD'],
+            ['BROWNTAIL', 'BROWNBLAZE', 'BROWNPRINCE', 'BROWNBIB', 'BROWNVEE', 'BROWNUNDERS', 'BROWNHONEY', 'BROWNFAROFA', 'BROWNDAMIEN', 'BROWNMISTER', 'BROWNBELLY', 'BROWNTAILTIP', 'BROWNTOES', 'BROWNTOPCOVER'],
+            ['BROWNAPRON', 'BROWNCAPSADDLE', 'BROWNMASKMANTLE', 'BROWNSQUEAKS', 'BROWNVOISTAR', 'BROWNTOESTAIL', 'BROWNRAVENPAW', 'BROWNPANTS', 'BROWNREVERSEPANTS', 'BROWNSKUNK', 'BROWNKARPATI', 'BROWNHALFWHITE', 'BROWNAPPALOOSA', 'BROWNDAPPLEPAW'],
+            ['BROWNHEART', 'BROWNLILTWO', 'BROWNGLASS', 'BROWNMOORISH', 'BROWNSEPIAPOINT', 'BROWNMINKPOINT', 'BROWNSEALPOINT', 'BROWNMAO', 'BROWNLUNA', 'BROWNCHESTSPECK', 'BROWNWINGS', 'BROWNPAINTED', 'BROWNHEARTTWO', 'BROWNWOODPECKER'],
+            ['BROWNBOOTS', 'BROWNMISS', 'BROWNCOW', 'BROWNCOWTWO', 'BROWNBUB', 'BROWNBOWTIE', 'BROWNMUSTACHE', 'BROWNREVERSEHEART', 'BROWNSPARROW', 'BROWNVEST']
+
+        ]
+
+        for row, patches in enumerate(white_patches):
+            for col, patch in enumerate(patches):
+                self.make_group('brownpatches', (col, row), f'white{patch}')
+
+white_patches = [
+            ['FULLGINGER', 'GINGERANY', 'GINGERTUXEDO', 'GINGERLITTLE', 'GINGERCOLOURPOINT', 'GINGERVAN', 'GINGERANYTWO','GINGERMOON', 'GINGERPHANTOM', 'GINGERPOWDER', 'GINGERBLEACHED', 'GINGERSAVANNAH', 'GINGERFADESPOTS', 'GINGERPEBBLESHINE'],
+            ['GINGEREXTRA', 'GINGERONEEAR', 'GINGERBROKEN', 'GINGERLIGHTTUXEDO', 'GINGERBUZZARDFANG', 'GINGERRAGDOLL', 'GINGERLIGHTSONG', 'GINGERVITILIGO', 'GINGERVOIBLACKSTAR', 'GINGERPIEBALD', 'GINGERCURVED', 'GINGERPETAL', 'GINGERSHIBAINU', 'GINGEROWL'],
+            ['GINGERTIP', 'GINGERFANCY', 'GINGERFRECKLES', 'GINGERRINGTAIL', 'GINGERHALFFACE', 'GINGERPANTSTWO', 'GINGERGOATEE', 'GINGERVITILIGOTWO', 'GINGERPAWS', 'GINGERMITAINE', 'GINGERBROKENBLAZE', 'GINGERSCOURGE', 'GINGERDIVA', 'GINGERBEARD'],
+            ['GINGERTAIL', 'GINGERBLAZE', 'GINGERPRINCE', 'GINGERBIB', 'GINGERVEE', 'GINGERUNDERS', 'GINGERHONEY', 'GINGERFAROFA', 'GINGERDAMIEN', 'GINGERMISTER', 'GINGERBELLY', 'GINGERTAILTIP', 'GINGERTOES', 'GINGERTOPCOVER'],
+            ['GINGERAPRON', 'GINGERCAPSADDLE', 'GINGERMASKMANTLE', 'GINGERSQUEAKS', 'GINGERVOISTAR', 'GINGERTOESTAIL', 'GINGERRAVENPAW', 'GINGERPANTS', 'GINGERREVERSEPANTS', 'GINGERSKUNK', 'GINGERKARPATI', 'GINGERHALFWHITE', 'GINGERAPPALOOSA', 'GINGERDAPPLEPAW'],
+            ['GINGERHEART', 'GINGERLILTWO', 'GINGERGLASS', 'GINGERMOORISH', 'GINGERSEPIAPOINT', 'GINGERMINKPOINT', 'GINGERSEALPOINT', 'GINGERMAO', 'GINGERLUNA', 'GINGERCHESTSPECK', 'GINGERWINGS', 'GINGERPAINTED', 'GINGERHEARTTWO', 'GINGERWOODPECKER'],
+            ['GINGERBOOTS', 'GINGERMISS', 'GINGERCOW', 'GINGERCOWTWO', 'GINGERBUB', 'GINGERBOWTIE', 'GINGERMUSTACHE', 'GINGERREVERSEHEART', 'GINGERSPARROW', 'GINGERVEST']
+
+        ]
+
+        for row, patches in enumerate(white_patches):
+            for col, patch in enumerate(patches):
+                self.make_group('gingerpatches', (col, row), f'white{patch}')
+
+white_patches = [
+            ['BODYSTRIPE', 'BLACKBODYSTRIPE', 'BROWNBODYSTRIPE', 'GINGERBODYSTRIPE', 'TIGERBODYSTRIPE', 'BLACKTIGERBODYSTRIPE', 'BROWNTIGERBODYSTRIPE', 'GINGERTIGERBODYSTRIPE', 'SPRAYEDBODYSTRIPE', 'BLACKSPRAYEDBODYSTRIPE', 'BROWNSPRAYEDBODYSTRIPE', 'GINGERSPRAYEDBODYSTRIPE'],
+            ['REVERSEBODYSPRITE', 'BLACKREVERSEBODYSPRITE', 'BROWNREVERSEBODYSPRITE', 'GINGERREVERSEBODYSPRITE', 'REVERSETIGERBODYSPRITE', 'BLACKREVERSETIGERBODYSPRITE', 'BROWNREVERSETIGERBODYSPRITE', 'GINGERREVERSETIGERBODYSPRITE', 'REVERSELEOPARDBODYSPRITE', 'BLACKREVERSELEOPARDBODYSPRITE', 'BROWNREVERSELEOPARDBODYSPRITE', 'GINGERREVERSELEOPARDBODYSPRITE']
+
+        ]
+
+        for row, patches in enumerate(white_patches):
+            for col, patch in enumerate(patches):
+                self.make_group('voithexpatches', (col, row), f'white{patch}')
+
+
         # Define colors and categories
         color_categories = [
             ['WHITE', 'PALEGREY', 'SILVER', 'GREY', 'DARKGREY', 'GHOST', 'BLACK'],
@@ -204,7 +263,23 @@ class Sprites:
             'singlecolours', 'tabbycolours', 'marbledcolours', 'rosettecolours',
             'smokecolours', 'tickedcolours', 'speckledcolours', 'bengalcolours',
             'mackerelcolours', 'classiccolours', 'sokokecolours', 'agouticolours',
-            'singlestripecolours', 'maskedcolours'
+            'singlestripecolours', 'maskedcolours',
+            'voithexpeltssokokev', 'voithexsokoke', 'voithexspeckledtabby', 'voithexstain'
+        ]
+
+        for row, colors in enumerate(color_categories):
+            for col, color in enumerate(colors):
+                for color_type in color_types:
+                    self.make_group(color_type, (col, row), f'{color_type[:-7]}{color}')
+
+        color_categories = [
+            ['PEACHYELLOW', 'MOCHA', 'METALLICBRONZE', 'WALNUT', 'FOX', 'ESPRESSO', 'PALEORANGE', 'PALECARMINE', 'CARAMEL', 'SIENNA2', 'VANILLA', 'MUSHROOM', 'COFFEE', 'RICHGOLD', 'MOCCACCINO', 'PALEBROWN', 'DUSTYPINK', 'GRASSY'],
+            ['CLOUD', 'VAMPIRE', 'DOVE', 'GRAVEL', 'SLATEGREY', 'ICE', 'CADETBLUE', 'OLDLAVENDER', 'COMET', 'MIDGREY', 'IRONGREY', 'DUST', 'VIOLET', 'DARKVIOLET', 'BLUEVIOLET', 'CHARCOAL', 'ASH', 'PALEVIOLET'],
+        ]
+
+        color_types = [
+            'voithexpeltssingle', 'voithexpeltstabby', 'voithexpeltsmarbled', 'voithexpeltsrosette', 'voithexpeltssmoke', 'voithexpeltsticked', 'voithexpeltsspeckled', 'voithexpeltsbengal',
+            'voithexpeltsmackrel', 'voithexpeltsclassic', 'voithexpeltssokoke', 'voithexpeltsagouti', 'voithexpeltssinglestripe', 'voithexpeltsspeckledtabby', 'voithexpeltsstain', 'voithexpeltsmasked'
         ]
 
         for row, colors in enumerate(color_categories):
