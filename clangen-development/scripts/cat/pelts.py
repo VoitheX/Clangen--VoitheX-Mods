@@ -828,7 +828,7 @@ class Pelt:
             _temp = par_whitepatches.copy()
             if self.name == "Tortie":
                 for p in _temp.copy():
-                    if p in Pelt.high_white + Pelt.mostly_white + ["FULLWHITE", "FULLBLACK", "FULLBROWN", "FULLGINGER"]:
+                    if p in Pelt.high_white + Pelt.mostly_white + ["FULLWHITE"]:
                         _temp.remove(p)
             elif self.name == "Calico":
                 for p in _temp.copy():
@@ -860,20 +860,20 @@ class Pelt:
 
         white_list = [Pelt.little_white, Pelt.mid_white, Pelt.high_white, Pelt.mostly_white, ['FULLWHITE'], ['FULLBLACK'], ['FULLBROWN'], ['FULLGINGER']]
 
-        weights = [0, 0, 0, 0, 0]  # Same order as white_list
+        weights = [0, 0, 0, 0, 0, 0, 0, 0]  # Same order as white_list
         for p_ in par_whitepatches:
             if p_ in Pelt.little_white:
-                add_weights = (40, 20, 15, 5, 0)
+                add_weights = (40, 20, 15, 5, 0, 0, 0, 0)
             elif p_ in Pelt.mid_white:
-                add_weights = (10, 40, 15, 10, 0)
+                add_weights = (10, 40, 15, 10, 0, 0, 0, 0)
             elif p_ in Pelt.high_white:
-                add_weights = (15, 20, 40, 10, 1)
+                add_weights = (15, 20, 40, 10, 1, 1, 1, 1)
             elif p_ in Pelt.mostly_white:
-                add_weights = (5, 15, 20, 40, 5)
+                add_weights = (5, 15, 20, 40, 5, 5, 5, 5)
             elif p_ == "FULLWHITE":
-                add_weights = (0, 5, 15, 40, 10)
+                add_weights = (0, 5, 15, 40, 10, 10, 10, 10)
             else:
-                add_weights = (0, 0, 0, 0, 0)
+                add_weights = (0, 0, 0, 0, 0, 0, 0, 0)
 
             for x in range(0, len(weights)):
                 weights[x] += add_weights[x]
@@ -881,24 +881,24 @@ class Pelt:
         # If all the weights are still 0, that means none of the parents have white patches.
         if not any(weights):
             if not all(parents):  # If any of the parents are None (unknown), use the following distribution:
-                weights = [20, 10, 10, 5, 0]
+                weights = [20, 10, 10, 5, 0, 0, 0, 0]
             else:
                 # Otherwise, all parents are known and don't have any white patches. Focus distribution on little_white.
-                weights = [50, 5, 0, 0, 0]
+                weights = [50, 5, 0, 0, 0, 0, 0, 0]
 
         # Adjust weights for torties, since they can't have anything greater than mid_white:
         if self.name == "Tortie":
-            weights = weights[:2] + [0, 0, 0]
+            weights = weights[:2] + [0, 0, 0, 0, 0, 0]
             # Another check to make sure not all the values are zero. This should never happen, but better
             # safe than sorry.
             if not any(weights):
-                weights = [2, 1, 0, 0, 0]
+                weights = [2, 1, 0, 0, 0, 0, 0, 0]
         elif self.name == "Calico":
-            weights = [0, 0, 0] + weights[3:]
+            weights = [0, 0, 0, 0, 0, 0] + weights[3:]
             # Another check to make sure not all the values are zero. This should never happen, but better
             # safe than sorry.
             if not any(weights):
-                weights = [2, 1, 0, 0, 0]
+                weights = [2, 1, 0, 0, 0, 0, 0, 0]
 
         chosen_white_patches = choice(
             random.choices(white_list, weights=weights, k=1)[0]
@@ -919,19 +919,19 @@ class Pelt:
 
         # Adjust weights for torties, since they can't have anything greater than mid_white:
         if self.name == "Tortie":
-            weights = (2, 1, 0, 0, 0)
+            weights = (2, 1, 0, 0, 0, 0, 0, 0)
         elif self.name == "Calico":
-            weights = (0, 0, 20, 15, 1)
+            weights = (0, 0, 20, 15, 1, 1, 1, 1)
         else:
-            weights = (10, 10, 10, 10, 1)
+            weights = (10, 10, 10, 10, 1, 1, 1, 1)
 
-        white_list = [Pelt.little_white, Pelt.mid_white, Pelt.high_white, Pelt.mostly_white, ['FULLWHITE']]
+        white_list = [Pelt.little_white, Pelt.mid_white, Pelt.high_white, Pelt.mostly_white, ['FULLWHITE'], ['FULLBLACK'], ['FULLBROWN'], ['FULLGINGER']]
         chosen_white_patches = choice(
             random.choices(white_list, weights=weights, k=1)[0]
         )
 
         self.white_patches = chosen_white_patches
-        if self.points and self.white_patches in [Pelt.high_white, Pelt.mostly_white, 'FULLWHITE']:
+        if self.points and self.white_patches in [Pelt.high_white, Pelt.mostly_white, 'FULLWHITE', 'FULLBLACK', 'FULLBROWN', 'FULLGINGER']:
             self.points = None
 
     def init_white_patches(self, pelt_white, parents: tuple):
